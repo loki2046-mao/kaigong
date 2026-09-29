@@ -36,8 +36,8 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
   background:transparent;color:var(--ink);font-family:inherit;font-size:15px;cursor:pointer;opacity:.75}
 #mute.off{opacity:.32;text-decoration:line-through}
 
-#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:132px;z-index:10;font-size:14.5px;letter-spacing:3px;
-  color:var(--brown);opacity:.9;pointer-events:none;white-space:nowrap}
+#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:132px;z-index:10;font-size:15px;font-weight:600;letter-spacing:3px;
+  color:var(--ink);background:rgba(247,240,221,.9);padding:5px 16px;border-radius:3px;box-shadow:0 1px 0 rgba(48,41,36,.2);pointer-events:none;white-space:nowrap}
 
 /* ---------- flash 文字 ---------- */
 #flash{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);z-index:11;font-size:30px;font-weight:700;
@@ -60,17 +60,17 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
 
 /* ---------- 力量刻度（卷轴木尺） ---------- */
 #meter{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;width:min(880px,94vw);z-index:10;pointer-events:none}
-#stamrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;letter-spacing:2px;color:var(--brown)}
+#stamrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px;font-weight:600;letter-spacing:2px;color:#46351f}
 #stam{flex:1;max-width:420px;height:7px;border:1.5px solid var(--brown);border-radius:4px;overflow:hidden;background:rgba(120,84,60,.12)}
 #stam i{display:block;height:100%;width:100%;background:var(--brown);border-radius:2px;transition:width .1s linear}
 #scale{position:relative;height:46px;background:linear-gradient(#f7f0dd,#e8ddc2);border:2px solid rgba(48,41,36,.78);
   border-radius:3px;box-shadow:0 3px 0 rgba(48,41,36,.18)}
 #zone{position:absolute;top:0;bottom:0;background:linear-gradient(180deg,#e2c46a,var(--gold));
   border-left:2.5px dashed var(--gold2);border-right:2.5px dashed var(--gold2)}
-.zlab{position:absolute;top:1px;font-size:12px;font-weight:700;color:#6d5416;transform:translateX(-50%)}
+.zlab{position:absolute;top:1px;font-size:13px;font-weight:700;color:#3d2e0e;transform:translateX(-50%)}
 .tick{position:absolute;bottom:0;width:1.5px;height:10px;background:rgba(48,41,36,.4)}
 .tick.big{height:16px}
-.tnum{position:absolute;bottom:16px;font-size:11px;color:rgba(48,41,36,.55);transform:translateX(-50%)}
+.tnum{position:absolute;bottom:16px;font-size:12px;font-weight:600;color:rgba(48,41,36,.88);transform:translateX(-50%)}
 #cursor{position:absolute;top:-7px;bottom:-7px;width:4px;background:var(--ink);border-radius:2px;transform:translateX(-50%)}
 /* 背景动效：慢推镜 / 流雾 / 过雁 */
 @keyframes bgDrift{0%,100%{transform:scale(1.05) translate(0,0)}50%{transform:scale(1.09) translate(-9px,-5px)}}
