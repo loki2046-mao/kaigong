@@ -36,14 +36,17 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
   background:transparent;color:var(--ink);font-family:inherit;font-size:15px;cursor:pointer;opacity:.75}
 #mute.off{opacity:.32;text-decoration:line-through}
 
-#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:132px;z-index:10;font-size:15px;font-weight:600;letter-spacing:3px;
-  color:var(--ink);background:rgba(247,240,221,.9);padding:5px 16px;border-radius:3px;box-shadow:0 1px 0 rgba(48,41,36,.2);pointer-events:none;white-space:nowrap}
+#hint{text-align:center;font-size:15px;font-weight:700;letter-spacing:3px;color:var(--ink);
+  margin:0 0 8px;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hint:empty{display:none}
 
 /* ---------- flash 文字 ---------- */
-#flash{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);z-index:11;font-size:30px;font-weight:700;
-  letter-spacing:8px;color:var(--red);opacity:0;pointer-events:none;text-shadow:0 1px 0 var(--paper)}
-#flash.show{animation:flashIn .9s ease-out}
-@keyframes flashIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+/* 玩家反馈频闪伤眼：换段提示改为纸签淡入淡出，不再缩放爆闪 */
+#flash{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);z-index:11;font-size:21px;font-weight:700;
+  letter-spacing:6px;color:var(--ink);background:rgba(246,239,220,.95);border:1.5px solid rgba(48,41,36,.6);
+  padding:9px 20px 9px 26px;border-radius:4px;box-shadow:0 3px 10px rgba(48,41,36,.2);opacity:0;pointer-events:none}
+#flash.show{animation:flashIn 1.15s ease-out}
+@keyframes flashIn{0%{opacity:0}16%{opacity:.97}68%{opacity:.97}100%{opacity:0}}}
 
 /* ---------- 场景 ---------- */
 #stage{position:absolute;inset:0;z-index:1}
@@ -59,7 +62,10 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
 @keyframes bpop{0%{transform:scale(.92) translateY(3px)}100%{transform:scale(1)}}
 
 /* ---------- 力量刻度（卷轴木尺） ---------- */
-#meter{position:absolute;left:50%;transform:translateX(-50%);bottom:20px;width:min(880px,94vw);z-index:10;pointer-events:none}
+/* 玩家反馈"看不清"：提示与刻度并成一块题签式纸底面板，墨色统一 */
+#meter{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;width:min(880px,94vw);z-index:10;pointer-events:none;
+  background:rgba(246,239,220,.93);border:1.5px solid rgba(48,41,36,.55);border-radius:6px;
+  box-shadow:0 3px 12px rgba(48,41,36,.25);padding:9px 16px 13px}
 #stamrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px;font-weight:600;letter-spacing:2px;color:#46351f}
 #stam{flex:1;max-width:420px;height:7px;border:1.5px solid var(--brown);border-radius:4px;overflow:hidden;background:rgba(120,84,60,.12)}
 #stam i{display:block;height:100%;width:100%;background:var(--brown);border-radius:2px;transition:width .1s linear}
@@ -95,6 +101,11 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
 #banner h1.red{color:var(--red);font-size:84px}
 #banner .sub{margin-top:14px;font-size:20px;letter-spacing:8px;color:var(--brown)}
 #banner .rule{margin-top:18px;width:220px;height:2px;background:var(--ink);opacity:.5}
+#bannerSeal{display:none;margin-top:16px;width:54px;height:54px;line-height:56px;text-align:center;background:var(--red);
+  color:#f6ecd6;font-size:30px;font-weight:700;border-radius:5px;transform:rotate(6deg);box-shadow:0 2px 0 rgba(48,41,36,.28)}
+/* 节奏环反馈：描边颜色平滑过渡（原硬切闪色频闪伤眼） */
+#ringBand{transition:stroke .25s ease}
+#streak{font-size:21px;font-weight:700;letter-spacing:3px;fill:#8F3B2E;opacity:0;transition:opacity .3s ease}
 
 /* ---------- 失败层 ---------- */
 #fail{position:absolute;inset:0;z-index:13;display:none;flex-direction:column;align-items:center;justify-content:center;
@@ -193,6 +204,7 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
           <circle id="ringBand2" cx="660" cy="300" r="40" fill="none" stroke="#D6B45A" stroke-width="3" opacity=".5"/>
           <circle id="ringP" cx="660" cy="300" r="26" fill="none" stroke="#3B322A" stroke-width="4"/>
           <circle cx="660" cy="300" r="3.5" fill="#3B322A"/>
+          <text id="streak" x="660" y="222" text-anchor="middle">连珠</text>
         </g>
 
         <!-- 弓 -->
@@ -283,11 +295,11 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
     <span id="hud-bow">五斗弓</span>
     <button id="mute" title="声音开关">音</button>
   </div>
-  <div id="hint"></div>
   <div id="flash"></div>
   <div id="bubble"></div>
 
   <div id="meter">
+    <div id="hint"></div>
     <div id="stamrow"><span>气 力</span><div id="stam"><i id="stamFill"></i></div><span id="stamTip">松手时机决定一切</span></div>
     <div id="scale">
       <div id="zone"></div>
@@ -297,7 +309,7 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
     </div>
   </div>
 
-  <div id="banner"><h1 id="bannerH"></h1><div class="sub" id="bannerSub"></div><div class="rule" id="bannerRule"></div></div>
+  <div id="banner"><h1 id="bannerH"></h1><div class="sub" id="bannerSub"></div><div class="rule" id="bannerRule"></div><div id="bannerSeal">甲</div></div>
 
   <div id="fail">
     <h2 id="failH">差一点。</h2>
@@ -308,7 +320,7 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
   <div id="title" class="screen show">
     <div class="big"><span class="char">开</span><span class="char">弓</span><span class="seal">武</span></div>
     <div class="rule"></div>
-    <div class="tag">古法开弓 · 十关试炼</div>
+    <div class="tag">古法开弓 · 十五关试炼</div>
     <div class="ops">空格 或 鼠标 · 长按 / 连点 / 松手 · 三种操作玩到底</div>
     <button class="btn" id="btnStart">开 弓</button>
     <button class="btn ghost small" id="btnReset" style="display:none">从头再来</button>
@@ -316,14 +328,13 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
   </div>
 
   <div id="end" class="screen dark">
-    <h1>新科武状元</h1>
+    <h1 id="endH">骠骑大将军</h1>
     <div class="card">
-      <div class="row"><span>最高弓力</span><b>六石</b></div>
-      <div class="row"><span>射艺</span><b>甲</b></div>
-      <div class="row"><span>定力</span><b>甲</b></div>
-      <div class="row"><span>称号</span><b>武状元</b></div>
+      <div class="row"><span>最高弓力</span><b id="endBow">十石</b></div>
+      <div class="row"><span>甲等</span><b id="endJia">0 关</b></div>
+      <div class="row"><span>称号</span><b id="endTitle">骠骑大将军</b></div>
     </div>
-    <div class="share" id="shareLine">「我开了六石弓，你能开几石？」</div>
+    <div class="share" id="shareLine">「我开了十石弓，你能开几石？」</div>
     <button class="btn" id="btnCopy">复制战报</button>
     <button class="btn ghost small" id="btnAgain">再开一次</button>
   </div>
@@ -372,15 +383,15 @@ const LEVELS = [
     npcStart:"跟着鼓点走，别瞎点。", npcWin:"三石，开。",
     winBanner:"三石，开。" },
   { id:7, title:"偏将", bowName:"四石弓", mode:"tap",
-    tapGain:6, tapDecay:10, lateFrom:84, lateTapMul:.85, lateDecayMul:1.25,
+    tapGain:6, tapDecay:11.5, lateFrom:86, lateTapMul:.85, lateDecayMul:1.25,
     zone:[94,99], stamina:11,
     fakeRebound:{ triggerMin:70, triggerMax:85, drop:10, bonusT:1.0, bonusMul:1.6 },
     hint:"这张弓会咬人 · 连点，进金区即开",
     npcStart:"这张弓，会咬人。", npcWin:"四石，开。",
     winBanner:"四石，开。" },
   { id:8, title:"猛将", bowName:"五石弓", mode:"hold2",
-    holdGain:30, stage2Gain:13, lockAt:70, lockDur:.5, holdDecayLate:5, lateFrom:92,
-    dropRate:90, zone:[96,99.5], stamina:16, tremor:1,
+    holdGain:30, stage2Gain:13, lockAt:70, lockDur:.5, holdDecayLate:6, lateFrom:92,
+    dropRate:85, zone:[96.5,99.5], stamina:16, tremor:1.1,
     hint:"拉到七成 → 稳住 → 再拉 · 金区内松手",
     npcStart:"五石。现在退出，还来得及。", npcWin:"五石，开。",
     winBanner:"五石，开。" },
@@ -392,9 +403,37 @@ const LEVELS = [
     npcStart:"六石。……", npcWin:"……",
     winBanner:"六石开弓", afterWin:"满营无声" },
   { id:10, title:"武状元候选", bowName:"殿试 · 射柳", mode:"aim",
-    aimPeriod:1.7, aimAmp:38, aimB:8, zone:[45.5,54.5], targetCx:50, stamina:10,
+    aimPeriod:1.6, aimAmp:40, aimB:8, zone:[46,54], targetCx:50, stamina:10,
     hint:"准星晃进金圈的一瞬 · 按下放箭",
-    npcStart:"开弓，只是第一试。", npcWin:"新科武状元！", winBanner:"中的！" },
+    npcStart:"开弓，只是第一试。", npcWin:"武状元，不过是个开头。", winBanner:"中的！" },
+  { id:11, title:"羽林郎", bowName:"七石弓", mode:"hold",
+    holdGain:34, dropRate:85, zone:[88,97], stamina:14, tremor:1.2,
+    lateRebound:{ from:78, rate:13 },
+    hint:"七石了 · 弓会往回扯，看准金区松手",
+    npcStart:"七石。禁军里能开的，一只手数得过来。", npcFail:"稳住呼吸再来。", npcWin:"七石，开。",
+    winBanner:"七石，开。" },
+  { id:12, title:"中郎将", bowName:"八石弓", mode:"tap",
+    tapGain:6.5, tapDecay:11, lateFrom:82, lateTapMul:.8, lateDecayMul:1.3,
+    zone:[91,97], stamina:11,
+    hint:"八石连点 · 后段掉力更快，别停手",
+    npcStart:"八石。点不动就退。", npcFail:"后段松手了？", npcWin:"八石，开。",
+    winBanner:"八石，开。" },
+  { id:13, title:"镇北将军", bowName:"九石弓", mode:"rhythm",
+    beat:.5, perfectGain:9, goodGain:6, tapGain:3, tapDecay:9.2, winScale:1.25,
+    zone:[94,98.5], stamina:19,
+    hint:"九石跟环 · 圆环扩到金环时点击",
+    npcStart:"九石硬弓。跟着鼓点，一拍一击。", npcFail:"乱了拍子。", npcWin:"九石，开。",
+    winBanner:"九石，开。" },
+  { id:14, title:"骠骑将军", bowName:"十石弓", mode:"hold2",
+    holdGain:21, stage2Gain:12, lockAt:74, lockDur:.55, holdDecayLate:8, lateFrom:93,
+    dropRate:85, zone:[98,99.6], stamina:17, tremor:1.4,
+    hint:"十石 · 拉到七成四 → 稳住 → 再拉 · 金区内松手",
+    npcStart:"十石。古今开此弓者，屈指可数。", npcWin:"十石，开。",
+    winBanner:"十石，开。" },
+  { id:15, title:"大将军", bowName:"御前校射", mode:"aim",
+    aimPeriod:1.5, aimAmp:42, aimB:9, zone:[46.8,53.6], targetCx:50, stamina:12,
+    hint:"御前校射 · 准星晃进金圈的一瞬放箭",
+    npcStart:"陛下亲临。这一箭，射给天下看。", npcWin:"骠骑大将军！", winBanner:"穿柳！" },
 ];
 
 /* 隐藏动态难度：按当前关连续失败次数叠加。绝不显示给玩家。 */
@@ -404,20 +443,23 @@ function computeDDA(f){
   if (f >= 3) { d.gain *= 1.05; d.beatWin = 1.3; }
   if (f >= 4) d.decay *= 0.92;
   if (f >= 5) { d.widen += 4; d.beatWin = 1.7; }
-  if (f >= 6) { d.gain *= 1.18; d.decay *= 0.75; d.widen += 6; d.beatWin = 2.6; d.staminaMul = 1.3; }
+  if (f >= 6) { d.gain *= 1.25; d.decay *= 0.75; d.widen += 9; d.beatWin = 2.6; d.staminaMul = 1.6; }
   return d;
 }
 /* 真实判定区 = 显示区。看到什么就是什么，绝无隐藏门槛。 */
 function computeZone(L, dda){
   let min = L.zone[0], max = L.zone[1];
-  if (L.dynamicMin && dda.widen > 0) min = Math.max(L.dynamicMin, min - dda.widen);
-  else min = Math.max(0, min - Math.min(dda.widen, 12));
-  max = Math.min(100, max + Math.floor(Math.min(dda.widen, 12) / 2));
+  // 射柳类准星关：慢手玩家首过误差固定（时间误差×准星速度），辅助放宽需比长按关更大才兜得住（in8 ≥85%）
+  const w = L.mode === "aim" ? dda.widen * 1.7 : dda.widen;
+  const cap = L.mode === "aim" ? 40 : 12;
+  if (L.dynamicMin && dda.widen > 0) min = Math.max(L.dynamicMin, min - w);
+  else min = Math.max(0, min - Math.min(w, cap));
+  max = Math.min(100, max + Math.floor(Math.min(w, cap) / 2));
   return [min, max];
 }
 function beatWindows(L, dda){
-  const cap = 0.46 * L.beat;
-  return { perfect: Math.min(cap, .06 * dda.beatWin), good: Math.min(cap, .20 * dda.beatWin) };
+  const cap = 0.46 * L.beat, k = L.winScale || 1;
+  return { perfect: Math.min(cap, .06 * k * dda.beatWin), good: Math.min(cap, .20 * k * dda.beatWin) };
 }
 function beatQualityAt(t, L, dda){
   const w = beatWindows(L, dda);
@@ -553,7 +595,7 @@ const G = {
   state:"title", lvlIndex:0, run:null, dda:computeDDA(0), zone:[0,100],
   fails:{}, holding:false, lastClick:-9, timeScale:1, slowmoReal:0,
   aimT:0, fired:false, shake:0, seqId:0, failReady:false,
-  unlocked: saved.unlocked || 1, muted: !!saved.muted,
+  unlocked: saved.unlocked || 1, muted: !!saved.muted, grades: saved.grades || {}, streak: 0,
   tweens:[], beatIdx:-1, breathT:0, flashT:0,
 };
 
@@ -706,7 +748,7 @@ const D = {};
  "arrowG","arrowLine","arrowHead","arrowFletch","hero","heroUpper","heroLower","legB","footB","legF","footF",
  "torso","head","faceRed","eyeB","eyeF","mouth","sweat","armF","armFS","armB","armBS","handF","handB",
  "targetG","willowG","leaves","aimTgt","crossV","crowd","world","mute","btnStart","btnReset",
- "btnRetry","btnCopy","btnAgain","shareLine"
+ "btnRetry","btnCopy","btnAgain","shareLine","bannerSeal","streak","endH","endBow","endJia","endTitle"
 ].forEach(id => D[id.replace(/-(\w)/g, (m,c)=>c.toUpperCase())] = $(id));
 
 /* ---------------- 静态布景 ---------------- */
@@ -760,18 +802,37 @@ function hideBanner(){ D.banner.classList.remove("show"); }
 /* ---------------- 关卡流程 ---------------- */
 function saveUnlocked(){
   const n = Math.max(G.unlocked, G.lvlIndex + 2);
-  G.unlocked = Math.min(n, 10);
-  store.set({ unlocked: G.unlocked, muted: G.muted });
+  G.unlocked = Math.min(n, LEVELS.length);
+  store.set({ unlocked: G.unlocked, muted: G.muted, grades: G.grades });
   refreshTitleButtons();
 }
 function refreshTitleButtons(){
   $("btnStart").textContent = G.unlocked > 1 ? `继续 · 第${G.unlocked}关` : "开 弓";
   $("btnReset").style.display = G.unlocked > 1 ? "" : "none";
 }
+/* 评级：甲（一次过）/ 乙（三次内）/ 丙（其余），只留最好的成绩 */
+const GRADE_RANK = { "丙":1, "乙":2, "甲":3 };
+function gradeOf(L){ const f = G.fails[L.id] || 0; return f === 0 ? "甲" : f <= 2 ? "乙" : "丙"; }
+function recordGrade(L){
+  const g = gradeOf(L), old = G.grades[L.id];
+  if (!old || GRADE_RANK[g] > GRADE_RANK[old]) { G.grades[L.id] = g; store.set({ unlocked: G.unlocked, muted: G.muted, grades: G.grades }); }
+}
+function showSeal(L){
+  D.bannerSeal.textContent = gradeOf(L);
+  D.bannerSeal.style.display = "";
+}
+function showEnd(){
+  const jia = Object.values(G.grades).filter(g => g === "甲").length;
+  D.endH.textContent = "骠骑大将军";
+  D.endBow.textContent = "十石";
+  D.endJia.textContent = `${jia} / ${LEVELS.length} 关`;
+  D.endTitle.textContent = "骠骑大将军";
+  D.shareLine.textContent = `「我开了十石弓，${jia} 关甲等，你能开几石？」`;
+}
 function startGame(fromLevel){
   AU.ensure();
   G.seqId++;
-  G.lvlIndex = clamp((fromLevel || 1) - 1, 0, 9);
+  G.lvlIndex = clamp((fromLevel || 1) - 1, 0, LEVELS.length - 1);
   D.title.classList.remove("show");
   startLevel();
 }
@@ -782,7 +843,7 @@ function startLevel(){
   G.fails[L.id] = G.fails[L.id] || 0;
   resetAttempt();
   // HUD
-  D.hudLevel.textContent = `第 ${G.lvlIndex + 1} / 10 关`;
+  D.hudLevel.textContent = `第 ${G.lvlIndex + 1} / ${LEVELS.length} 关`;
   D.hudStamp.textContent = L.title;
   D.hudBow.textContent = L.bowName;
   D.hint.textContent = L.hint;
@@ -794,13 +855,16 @@ function startLevel(){
   D.ringG.style.display = (L.mode === "rhythm" || L.mode === "hybrid") ? "" : "none";
   D.stamTip.textContent = aim ? "臂力有限，看准再放" : "松手时机决定一切";
   D.vignette.style.opacity = 0;
+  G.streak = 0;
+  D.streak.style.opacity = 0;
+  D.bannerSeal.style.display = "none";
   say(L.npcStart);
-  banner(`第${["一","二","三","四","五","六","七","八","九","十"][G.lvlIndex]}关`, `${L.title} · ${L.bowName}`);
+  banner(`第${["一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五"][G.lvlIndex]}关`, `${L.title} · ${L.bowName}`);
   later(1300, hideBanner);
   later(4200, () => { if (G.state === "play" && !G.run.maxP) say(L.npcStart); });
 }
 function setupBow(L){
-  const id = L.id, k = (id - 1) / 9;
+  const id = L.id, k = (id - 1) / 14;
   L._bowLen = 150 + id * 9;
   L._bowW = 4.5 + id * .9;
   const mix = (a, b) => Math.round(a + (b - a) * k);
@@ -876,7 +940,8 @@ function succeedAttempt(){
   G.timeScale = 1; G.slowmoReal = 0;
   AU.creakStop(); AU.duck(false);
   saveUnlocked();
-  if (L.mode === "aim") return; // 殿试由 fireArrow 自己走演出
+  recordGrade(L);
+  if (L.mode === "aim") return; // 射柳由 fireArrow 自己走演出
   // 成功停顿 0.1s → 松弦
   later(100, () => {
     G.holding = false;
@@ -885,15 +950,12 @@ function succeedAttempt(){
       G.shake = 1;
       G.arrowStuck = true; G.stuckX = 880; G.stuckY = 369; G.stuckAt = performance.now();
       say(L.npcWin || "");
-      if (L.id === 9) {
-        banner("六石开弓", "", true);
-        later(1400, () => banner("满营无声", ""));
-        later(3000, () => { hideBanner(); G.lvlIndex = 9; startLevel(); });
-      } else {
-        banner(L.winBanner, L.npcAfter || "");
-        AU.drum2(.18);
-        later(1500, () => { hideBanner(); if (G.state === "success") { G.lvlIndex++; startLevel(); } });
-      }
+      const goNext = () => { hideBanner(); if (G.state === "success") { G.lvlIndex++; startLevel(); } };
+      banner(L.winBanner, L.npcAfter || "");
+      showSeal(L);
+      AU.drum2(.18);
+      if (L.afterWin) later(1400, () => banner(L.afterWin, ""));
+      later(L.afterWin ? 3000 : 1500, goNext);
     });
   });
 }
@@ -925,8 +987,15 @@ function fireArrow(){
       G.shake = 1;
       G.arrowStuck = true; G.stuckX = 884; G.stuckY = 352; G.stuckAt = performance.now();
       saveUnlocked();
+      recordGrade(L);
       say(L.npcWin || "");
-      later(550, () => { D.end.classList.add("show"); G.state = "end"; say(""); });
+      if (G.lvlIndex >= LEVELS.length - 1) {
+        later(650, () => { showEnd(); D.end.classList.add("show"); G.state = "end"; say(""); });
+      } else {
+        banner(L.winBanner, "");
+        showSeal(L);
+        later(1500, () => { hideBanner(); if (G.state !== "end") { G.lvlIndex++; startLevel(); } });
+      }
     } else {
       AU.thock();
       const off = Math.abs(a - 50);
@@ -1128,18 +1197,26 @@ function updateScene(dt){
     if (show) {
       const ph = ((s.t % L.beat) + L.beat) % L.beat / L.beat;
       D.ringP.setAttribute("r", 26 + 54 * ph);
-      D.ringP.setAttribute("opacity", .35 + .65 * (1 - ph));
+      D.ringP.setAttribute("opacity", .5 + .45 * (1 - ph));
       const w = beatWindows(L, G.dda);
       D.ringBand.setAttribute("r", 53);
       D.ringBand.setAttribute("stroke-width", Math.max(7, 54 * (w.perfect / L.beat) * 2));
       D.ringBand2.setAttribute("r", 53 + 27 * (w.good / L.beat));
       const bi = Math.floor((s.t + L.beat * .5) / L.beat); // 鼓点落在圆环扫过金环的瞬间
       if (bi !== G.beatIdx) { G.beatIdx = bi; AU.beatTick(); }
-      // 点击质量反馈：金环闪色
-      if (G.lastQ && s.t - G.lastQ.at < .3) {
-        D.ringBand.setAttribute("stroke", G.lastQ.q === "perfect" ? "#fff6dc" : G.lastQ.q === "good" ? "#C8A85F" : "#A34A3B");
+      // 点击质量反馈：不再硬切亮白（玩家反馈频闪伤眼），改柔和同系色 + CSS 平滑过渡
+      if (G.lastQ && s.t - G.lastQ.at < .45) {
+        D.ringBand.style.stroke = G.lastQ.q === "perfect" ? "#EAD9A8" : G.lastQ.q === "good" ? "#CDA85C" : "#B06A50";
       } else {
-        D.ringBand.setAttribute("stroke", "#D6B45A");
+        D.ringBand.style.stroke = "#D6B45A";
+      }
+      // 连珠：perfect 连击计数（good 不断连，乱点才断），静态提示不闪烁
+      if (G.lastQ && G._streakSeen !== G.lastQ.at) {
+        G._streakSeen = G.lastQ.at;
+        if (G.lastQ.q === "perfect") G.streak = (G.streak || 0) + 1;
+        else if (G.lastQ.q === "norm") G.streak = 0;
+        if (G.streak >= 3) { D.streak.textContent = `连珠 ×${G.streak}`; D.streak.style.opacity = .92; }
+        else D.streak.style.opacity = 0;
       }
     }
   }
