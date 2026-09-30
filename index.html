@@ -66,6 +66,8 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
 #meter{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;width:min(880px,94vw);z-index:10;pointer-events:none;
   background:rgba(246,239,220,.93);border:1.5px solid rgba(48,41,36,.55);border-radius:6px;
   box-shadow:0 3px 12px rgba(48,41,36,.25);padding:9px 16px 13px}
+/* 标题/结算页显示时藏起整套游戏内 HUD：纸纱是半透明的，面板会透出来叠在标题文字上 */
+#app.chrome-hidden #meter,#app.chrome-hidden #hud{display:none}
 #stamrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px;font-weight:600;letter-spacing:2px;color:#46351f}
 #stam{flex:1;max-width:420px;height:7px;border:1.5px solid var(--brown);border-radius:4px;overflow:hidden;background:rgba(120,84,60,.12)}
 #stam i{display:block;height:100%;width:100%;background:var(--brown);border-radius:2px;transition:width .1s linear}
@@ -810,6 +812,7 @@ function refreshTitleButtons(){
   $("btnStart").textContent = G.unlocked > 1 ? `继续 · 第${G.unlocked}关` : "开 弓";
   $("btnReset").style.display = G.unlocked > 1 ? "" : "none";
 }
+function setChrome(v){ document.getElementById("app").classList.toggle("chrome-hidden", !v); }
 /* 评级：甲（一次过）/ 乙（三次内）/ 丙（其余），只留最好的成绩 */
 const GRADE_RANK = { "丙":1, "乙":2, "甲":3 };
 function gradeOf(L){ const f = G.fails[L.id] || 0; return f === 0 ? "甲" : f <= 2 ? "乙" : "丙"; }
@@ -831,6 +834,7 @@ function showEnd(){
 }
 function startGame(fromLevel){
   AU.ensure();
+  setChrome(true);
   G.seqId++;
   G.lvlIndex = clamp((fromLevel || 1) - 1, 0, LEVELS.length - 1);
   D.title.classList.remove("show");
@@ -990,7 +994,7 @@ function fireArrow(){
       recordGrade(L);
       say(L.npcWin || "");
       if (G.lvlIndex >= LEVELS.length - 1) {
-        later(650, () => { showEnd(); D.end.classList.add("show"); G.state = "end"; say(""); });
+        later(650, () => { showEnd(); setChrome(false); D.end.classList.add("show"); G.state = "end"; say(""); });
       } else {
         banner(L.winBanner, "");
         showSeal(L);
@@ -1290,6 +1294,7 @@ function frame(now){
 
 /* ---------------- 启动 ---------------- */
 refreshTitleButtons();
+setChrome(false); // 初始停在标题页，游戏内 HUD 藏起
 if (G.unlocked > 1) {
   $("btnStart").textContent = `继续 · 第${G.unlocked}关`;
   $("btnReset").style.display = "";
