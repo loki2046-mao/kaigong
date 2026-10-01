@@ -286,11 +286,12 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
         </g>
 
         <g id="bowDraw">
-          <path id="bowLimb" d="M-13,-70 C3,-56 8,-28 8,0 C8,28 3,56 -13,70" fill="none" stroke="#6B4E33" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="-13" cy="-70" r="2.4" id="bowTipT" fill="#8A6B45"/>
-          <circle cx="-13" cy="70" r="2.4" id="bowTipB" fill="#8A6B45"/>
-          <rect id="bowGripWrap" x="1" y="-16" width="12" height="32" rx="5" fill="#5C4029" stroke="#3B2F22" stroke-width=".8"/>
-          <rect id="bowBand" x="1" y="-4" width="12" height="8" fill="#8A6B45" opacity=".9"/>
+          <path id="bowLimbT" d="M10.7,-0.5 L8.2,-15.0 L0.6,-31.4 L-8.7,-45.2 L-13.9,-56.4 L-13.4,-65.5 L-10.0,-72.2 L-5.5,-76.4 L-6.5,-77.6 L-12.0,-73.8 L-16.6,-66.5 L-18.1,-55.6 L-13.3,-42.8 L-4.6,-28.6 L1.8,-13.0 L3.3,0.5 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
+          <path id="bowLimbB" d="M3.3,-0.5 L1.8,13.0 L-4.6,28.6 L-13.3,42.8 L-18.1,55.6 L-16.6,66.5 L-12.0,73.8 L-6.5,77.6 L-5.5,76.4 L-10.0,72.2 L-13.4,65.5 L-13.9,56.4 L-8.7,45.2 L0.6,31.4 L8.2,15.0 L10.7,0.5 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
+          <circle cx="-6" cy="-77" r="1.8" id="bowTipT" fill="#8A6B45"/>
+          <circle cx="-6" cy="77" r="1.8" id="bowTipB" fill="#8A6B45"/>
+          <rect id="bowGripWrap" x=".5" y="-17" width="8.5" height="34" rx="3" fill="#5C4029" stroke="#3B2F22" stroke-width=".8"/>
+          <rect id="bowBand" x=".5" y="-4" width="8.5" height="8" fill="#8A6B45" opacity=".9"/>
         </g>
         <polyline id="stringDyn" points="" fill="none" stroke="#2A231C" stroke-width="2.6" stroke-linecap="round" opacity="0" style="transition:opacity .12s linear"/>
         <g id="arrowG">
@@ -788,8 +789,8 @@ const BOW_GRIP = { x: 476.4, y: 330.0 };   // 满弓:前拳握弓把(渲染实�
 const BOW_NOCK = { x: 393.3, y: 328.5 };   // 满弓:勾弦点(渲染实测)
 const BOW_DRAW = { x: 476.4, y: 330.0, rot: 0 };
 const BOW_REST = { x: 440.7, y: 357.1, rot: 12 }; // 静立:弓垂持身侧
-const BOW_TIP = { x: -13, y: 70 };          // 弓梢(局部,回勾向射手)
-const BOW_STR = { x: 470.4, y: 330.0 };    // 未拉时弦中点(近直)
+const BOW_TIP = { x: -6, y: 77 };         // 弓梢(局部,回勾向射手)
+const BOW_STR = { x: BOW_GRIP.x - 6, y: BOW_GRIP.y };    // 未拉时弦中点(近直)
 const BOW_TIER = [
   { limb: "#6B4E33", edge: "#3B2F22", grip: "#5C4029", band: "#8A6B45" },  // 新兵营:木弓
   { limb: "#4A3423", edge: "#241B12", grip: "#33261A", band: "#C8A85F" },  // 校场大营:漆弓金饰
@@ -798,6 +799,10 @@ const BOW_TIER = [
 function rotPt(b, lx, ly){
   const r = b.rot * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
   return { x: b.x + lx * c - ly * s, y: b.y + lx * s + ly * c };
+}
+function rot(b, lx, ly){
+  const r = b.rot * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+  return { x: lx * c - ly * s, y: lx * s + ly * c };
 }
 function bowNock(pull){
   return { x: BOW_STR.x + (BOW_NOCK.x - BOW_STR.x) * pull, y: BOW_STR.y + (BOW_NOCK.y - BOW_STR.y) * pull };
@@ -811,7 +816,7 @@ const D = {};
 ["hud-level","hud-stamp","hud-bow","hint","flash","bubble","zone","ticks","cursor","pct",
  "stamFill","stamTip","banner","bannerH","bannerSub","bannerRule","fail","failH","failWhy",
  "title","end","vignette","ringG","ringP","ringBand","ringBand2","limbT","limbB","grip","string",
- "arrowG","arrowLine","arrowHead","arrowFletch","stringDyn","bowDraw","bowLimb","bowTipT","bowTipB","bowGripWrap","bowBand","hero","heroUpper","heroLower","legB","footB","legF","footF",
+ "arrowG","arrowLine","arrowHead","arrowFletch","stringDyn","bowDraw","bowLimbT","bowLimbB","bowTipT","bowTipB","bowGripWrap","bowBand","hero","heroUpper","heroLower","legB","footB","legF","footF",
  "torso","head","faceRed","eyeB","eyeF","mouth","sweat","armF","armFS","armB","armBS","handF","handB",
  "targetG","willowG","leaves","aimTgt","crossV","crowd","world","mute","btnStart","btnReset",
  "btnRetry","btnCopy","btnAgain","shareLine","bannerSeal","streak","endH","endBow","endJia","endTitle","heroFull","heroRest","tierTint","arrowSpr"
@@ -915,7 +920,7 @@ function startLevel(){
   D.heroFull.setAttribute("href", HERO_FULL[tier]);
   D.heroRest.setAttribute("href", HERO_REST[tier]);
   const bp = BOW_TIER[tier];
-  D.bowLimb.setAttribute("stroke", bp.limb);
+  D.bowLimbT.setAttribute("fill", bp.limb); D.bowLimbB.setAttribute("fill", bp.limb);
   D.bowGripWrap.setAttribute("fill", bp.grip);
   D.bowBand.setAttribute("fill", bp.band);
   D.bowTipT.setAttribute("fill", bp.band); D.bowTipB.setAttribute("fill", bp.band);
@@ -1061,7 +1066,11 @@ function releaseArrow(targetX, done, targetY){
   D.stringDyn.style.opacity = 1;
   addTween(.12, k => { // 弦回弹:勾弦点弹回弓把线
     const cx = nk.x + (BOW_STR.x - nk.x) * k, cy = nk.y + (BOW_STR.y - nk.y) * k;
-    const tt = rotPt(BOW_DRAW, BOW_TIP.x, -BOW_TIP.y), tb = rotPt(BOW_DRAW, BOW_TIP.x, BOW_TIP.y);
+    const rf = (1 - k) * pull * 5;
+    D.bowLimbT.setAttribute("transform", `rotate(${(-rf).toFixed(2)})`);
+    D.bowLimbB.setAttribute("transform", `rotate(${rf.toFixed(2)})`);
+    const tt = rotPt(BOW_DRAW, rot({ x: 0, y: 0, rot: -rf }, BOW_TIP.x, -BOW_TIP.y).x, rot({ x: 0, y: 0, rot: -rf }, BOW_TIP.x, -BOW_TIP.y).y);
+    const tb = rotPt(BOW_DRAW, rot({ x: 0, y: 0, rot: rf }, BOW_TIP.x, BOW_TIP.y).x, rot({ x: 0, y: 0, rot: rf }, BOW_TIP.x, BOW_TIP.y).y);
     D.stringDyn.setAttribute("points", `${tt.x.toFixed(1)},${tt.y.toFixed(1)} ${cx.toFixed(1)},${cy.toFixed(1)} ${tb.x.toFixed(1)},${tb.y.toFixed(1)}`);
   });
   addTween(.28, k => {
@@ -1242,7 +1251,13 @@ function heroPose(p, L, dt){
   const tipT = rotPt(bow, BOW_TIP.x, -BOW_TIP.y), tipB = rotPt(bow, BOW_TIP.x, BOW_TIP.y);
   const nk = bowNock(pull);
   D.stringDyn.style.opacity = drawn ? 1 : 0;
-  D.stringDyn.setAttribute("points", `${tipT.x.toFixed(1)},${tipT.y.toFixed(1)} ${nk.x.toFixed(1)},${nk.y.toFixed(1)} ${tipB.x.toFixed(1)},${tipB.y.toFixed(1)}`);
+  const flexD = pull * 5;
+  D.bowLimbT.setAttribute("transform", `rotate(${-flexD.toFixed(2)})`);
+  D.bowLimbB.setAttribute("transform", `rotate(${flexD.toFixed(2)})`);
+  const tipTL = rot({ x: 0, y: 0, rot: -flexD }, BOW_TIP.x, -BOW_TIP.y);
+  const tipBL = rot({ x: 0, y: 0, rot: flexD }, BOW_TIP.x, BOW_TIP.y);
+  const stT = rotPt(bow, tipTL.x, tipTL.y), stB = rotPt(bow, tipBL.x, tipBL.y);
+  D.stringDyn.setAttribute("points", `${stT.x.toFixed(1)},${stT.y.toFixed(1)} ${nk.x.toFixed(1)},${nk.y.toFixed(1)} ${stB.x.toFixed(1)},${stB.y.toFixed(1)}`);
   const ang = Math.atan2(BOW_GRIP.y - nk.y, BOW_GRIP.x - nk.x) * 180 / Math.PI;
   D.arrowG.setAttribute("transform", `translate(${nk.x.toFixed(1)},${nk.y.toFixed(1)}) rotate(${ang.toFixed(2)})`);
   D.arrowG.style.opacity = drawn ? 1 : 0;
