@@ -240,13 +240,13 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
             <ellipse cx="10" cy="1" rx="40" ry="5" fill="#3B322A" opacity=".16"/>
             <image id="heroRest" x="-46" y="-198" width="144" height="214" preserveAspectRatio="xMidYMax meet" opacity="1"/>
             <image id="heroFull" x="-46" y="-198" width="144" height="214" preserveAspectRatio="xMidYMax meet" opacity="0"/>
-          <g id="heroLower">
+          <g id="heroLower" visibility="hidden">
             <line id="legB" x1="-8" y1="-58" x2="-40" y2="-4" stroke="#3B322A" stroke-width="13" stroke-linecap="round"/>
             <line id="footB" x1="-40" y1="-2" x2="-58" y2="-2" stroke="#3B322A" stroke-width="9" stroke-linecap="round"/>
             <line id="legF" x1="12" y1="-58" x2="38" y2="-4" stroke="#3B322A" stroke-width="13" stroke-linecap="round"/>
             <line id="footF" x1="38" y1="-2" x2="56" y2="-2" stroke="#3B322A" stroke-width="9" stroke-linecap="round"/>
           </g>
-          <g id="heroUpper">
+          <g id="heroUpper" visibility="hidden">
             <!-- 背上箭囊：只露箭簇在肩后 -->
             <path d="M-30,-128 L-52,-100 L-40,-94 Z" fill="#78543C"/>
             <rect x="-56" y="-136" width="11" height="30" rx="4" fill="#78543C" transform="rotate(28 -50 -121)"/>
@@ -286,12 +286,12 @@ body{background:#221d19;font-family:"Songti SC","Noto Serif SC","STSong","SimSun
         </g>
 
         <g id="bowDraw">
-          <path id="bowLimbT" d="M18.6,-0.7 L14.5,-27.2 L0.7,-56.8 L-16.0,-82.2 L-22.6,-99.7 L-15.9,-114.3 L-3.1,-122.4 L-5.0,-125.6 L-19.6,-117.6 L-28.9,-100.0 L-22.7,-78.8 L-7.1,-52.7 L4.8,-24.3 L7.2,0.7 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
-          <path id="bowLimbB" d="M7.2,-0.7 L4.8,24.3 L-7.1,52.7 L-22.7,78.8 L-28.9,100.0 L-19.6,117.6 L-5.0,125.6 L-3.1,122.4 L-15.9,114.3 L-22.6,99.7 L-16.0,82.2 L0.7,56.8 L14.5,27.2 L18.6,0.7 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
-          <circle cx="-4" cy="-124" r="2.4" id="bowTipT" fill="#8A6B45"/>
-          <circle cx="-4" cy="124" r="2.4" id="bowTipB" fill="#8A6B45"/>
-          <rect id="bowGripWrap" x=".5" y="-17" width="8.5" height="34" rx="3" fill="#5C4029" stroke="#3B2F22" stroke-width=".8"/>
-          <rect id="bowBand" x=".5" y="-4" width="8.5" height="8" fill="#8A6B45" opacity=".9"/>
+          <path id="bowLimbT" d="M16.1,-0.7 L12.7,-22.2 L1.4,-46.3 L-12.1,-66.7 L-17.5,-80.4 L-12.4,-91.8 L-2.3,-98.4 L-4.2,-101.6 L-16.2,-95.2 L-24.0,-80.7 L-19.1,-63.2 L-6.6,-42.0 L2.8,-19.3 L4.7,0.7 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
+          <path id="bowLimbB" d="M4.7,-0.7 L2.8,19.3 L-6.6,42.0 L-19.1,63.2 L-24.0,80.7 L-16.2,95.2 L-4.2,101.6 L-2.3,98.4 L-12.4,91.8 L-17.5,80.4 L-12.1,66.7 L1.4,46.3 L12.7,22.2 L16.1,0.7 Z" fill="#6B4E33" stroke="#3B2F22" stroke-width=".8"/>
+          <circle cx="-3" cy="-100" r="2.2" id="bowTipT" fill="#8A6B45"/>
+          <circle cx="-3" cy="100" r="2.2" id="bowTipB" fill="#8A6B45"/>
+          <rect id="bowGripWrap" x="4" y="-16" width="12.5" height="32" rx="3" fill="#5C4029" stroke="#3B2F22" stroke-width=".8"/>
+          <rect id="bowBand" x="4" y="-3.5" width="12.5" height="7" fill="#8A6B45" opacity=".9"/>
         </g>
         <polyline id="stringDyn" points="" fill="none" stroke="#D8C8A6" stroke-width="3" stroke-linecap="round" opacity="0" style="transition:opacity .12s linear"/>
         <g id="arrowG">
@@ -789,12 +789,12 @@ const BOW_GRIP = { x: 476.4, y: 330.0 };   // 满弓:前拳握弓把(渲染实�
 const BOW_NOCK = { x: 393.3, y: 328.5 };   // 满弓:勾弦点(渲染实测)
 const BOW_DRAW = { x: 476.4, y: 330.0, rot: 0 };
 const BOW_REST = { x: 440.7, y: 357.1, rot: 12 }; // 静立:弓垂持身侧
-const BOW_TIP = { x: -4, y: 124 };         // 弓梢(局部,回勾向射手)
-const BOW_STR = { x: BOW_GRIP.x - 4, y: BOW_GRIP.y };    // 未拉时弦中点(近直)
+const BOW_TIP = { x: -3, y: 100 };         // 弓梢(局部,回勾向射手)
+const BOW_STR = { x: BOW_GRIP.x - 3, y: BOW_GRIP.y };    // 未拉时弦中点(近直)
 const BOW_TIER = [
-  { limb: "#6B4A2E", edge: "#241B12", grip: "#3E2C1C", band: "#A8794A" },  // 新兵营:木弓
-  { limb: "#5C3E24", edge: "#241B12", grip: "#33261A", band: "#C8A85F" },  // 校场大营:漆弓金饰
-  { limb: "#3F434C", edge: "#17181D", grip: "#2A2D33", band: "#9BA1AC" },  // 御前校射:玄铁弓
+  { limb: "#6B4A2E", edge: "#241B12", grip: "#584024", band: "#8A6238" },  // 新兵营:木弓
+  { limb: "#5C3E24", edge: "#241B12", grip: "#4A3018", band: "#A8863F" },  // 校场大营:漆弓金饰
+  { limb: "#3F434C", edge: "#17181D", grip: "#33363E", band: "#7A8090" },  // 御前校射:玄铁弓
 ];
 function rotPt(b, lx, ly){
   const r = b.rot * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
