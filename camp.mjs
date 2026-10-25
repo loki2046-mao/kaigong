@@ -11,11 +11,15 @@ import {paintCampTarget} from './camp-art.mjs?v=camp-profile9';
 import {createSoundscape} from './audio.mjs?v=camp-profile9';
 const nodes=new Map(),$=id=>nodes.get(id)||(nodes.set(id,document.getElementById(id)),nodes.get(id)),canvas=$('scene'),g=canvas.getContext('2d');let s=createCamp(),bow=campBow(s),draw=makeDraw(),result=null,age=0,settled=false,groundPlayed=false,resultPresented=false,holding=false,tap=false,paused=false,pointer=null,last=performance.now(),t=0;
 // Keep layout reads out of the animation loop; resize notifications refresh the ratio.
-let sceneScale=1;
-function measureScene(){if(canvas.clientHeight)sceneScale=canvas.clientWidth*720/(canvas.clientHeight*1000);}
+let sceneScale=1,pointerBounds=null;
+function measureScene(){if(!canvas.clientHeight)return;sceneScale=canvas.clientWidth*720/(canvas.clientHeight*1000);
+ const width=Math.min(1000,Math.round(canvas.clientWidth*Math.min(2,window.devicePixelRatio||1))),height=Math.round(width*.72);
+ if(width>0&&(canvas.width!==width||canvas.height!==height)){canvas.width=width;canvas.height=height;g.setTransform?.(width/1000,0,0,height/720,0,0);}
+}
 measureScene();
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(measureScene).observe(canvas);
 else window.addEventListener('resize',measureScene);
+window.addEventListener('resize',()=>{if(holding)cancel();});
 function setText(id,value){const node=$(id);if(node.textContent!==String(value))node.textContent=value;}
 function setStyle(id,key,value){const node=$(id);if(node.style[key]!==value)node.style[key]=value;}
 function setAttr(id,key,value){const node=$(id);value=String(value);if(node.getAttribute(key)!==value)node.setAttribute(key,value);}
@@ -46,14 +50,14 @@ function soundLabel(){$('sound').textContent=muted?'开启声音':'声音已开'
 $('sound').onclick=()=>{muted=!muted;if(!muted)band.ensure();band.mute();soundLabel();};
 function layout(){const m=MISSIONS[s.mission];document.querySelector('.heading h1').textContent=CHAPTER_NAMES[Math.floor(s.mission/5)];document.querySelector('.heading p').textContent=`军营历练 · 第 ${Math.floor(s.mission/5)+1} 回 / 十回`;$('progress').textContent=`${s.mission+1} / ${MISSIONS.length}`;$('stage').textContent=`${replay?'重挑战 · ':''}${profile.name}${profile.equipped&&titlesFor(profile).includes(profile.equipped)?'〔'+profile.equipped+'〕':''} · ${CHAPTER_NAMES[Math.floor(s.mission/5)]} · 第 ${s.mission%5+1} 关`;$('title').textContent=m.title;$('story').textContent=m.story;$('task').textContent=TARGETS[campTarget(s)].hint+(profile.keepsake?' · 佩物：'+(TRINKETS.find(i=>i.id===profile.keepsake)?.name||''):'');canvas.setAttribute('aria-label',`${m.title}：${TARGETS[campTarget(s)].hint}`);$('steps').innerHTML=m.targets.map((kind,i)=>`<span class="${i<s.phase?'done':i===s.phase?'current':''}">${i<s.phase?'✓ ':''}${TARGETS[kind].name}</span>`).join('');$('stats').textContent=`已中 ${s.hits} 箭 · 失手 ${s.misses} 次 · 不影响五十关进度`;}
 function ready(){$('replay-exit').hidden=!replay;bow=campBow(s);draw=makeDraw();result=null;age=0;settled=false;groundPlayed=false;resultPresented=false;holding=false;$('reward-card').hidden=true;$('chapter-result').hidden=true;updateQuest();$('draw').disabled=false;$('draw').textContent=tap?'轻点拉弓':'按住拉弓';$('receipt').textContent=s.phase?TARGETS[campTarget(s)].hint:'先看目标，再开弓。';layout();}
-function cancel(){holding=false;pointer=null;band.stopPull();if(!result&&!s.awaitingNext&&!s.complete){draw=makeDraw();$('draw').textContent=tap?'轻点拉弓':'按住拉弓';}}
-function hold(){if(paused||result||s.awaitingNext||s.complete)return;band.ensure();holding=true;if(!helpSeen){helpSeen=true;try{localStorage.setItem('kg-aim-help-seen','1');}catch{}}band.beginPull();$('draw').textContent=tap?'再点出箭':'松手出箭';$('npc-invite').open=false;$('mission-details').open=false;$('aim-help').open=false;}
+function cancel(){holding=false;pointer=null;pointerBounds=null;band.stopPull();if(!result&&!s.awaitingNext&&!s.complete){draw=makeDraw();$('draw').textContent=tap?'轻点拉弓':'按住拉弓';}}
+function hold(){if(paused||result||s.awaitingNext||s.complete)return;band.ensure();holding=true;if(!helpSeen){helpSeen=true;try{localStorage.setItem('kg-aim-help-seen','1');}catch{}}band.beginPull();$('draw').textContent=tap?'再点出箭':'松手出箭';setData(document.body,'playState','drawing');}
 function release(){if(!holding)return;holding=false;band.stopPull();result=campJudge(s,draw.power,draw);age=0;settled=false;groundPlayed=false;band.event('release',0,{power:draw.power});$('draw').disabled=true;$('draw').textContent='看箭落点…';$('receipt').textContent='箭在途中…';}
 // Suppress iOS/Android long-press selection only on the bow control.
 for(const type of ['contextmenu','selectstart','dragstart'])$('draw').addEventListener(type,e=>e.preventDefault());
-$('draw').onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();pointer=e.pointerId;$('draw').setPointerCapture(pointer);if(tap&&holding)release();else hold();};
-$('draw').onpointermove=e=>{if(pointer!==e.pointerId||!holding)return;const r=$('draw').getBoundingClientRect();if(e.clientX<r.left-10||e.clientX>r.right+10||e.clientY<r.top-12||e.clientY>r.bottom+12){cancel();$('receipt').textContent='已收弓，这次不算失手。';}};
-$('draw').onpointerup=e=>{if(pointer!==e.pointerId)return;pointer=null;if(!tap)release();};$('draw').onpointercancel=cancel;$('draw').onlostpointercapture=()=>{if(pointer!==null)cancel();};
+$('draw').onpointerdown=e=>{if(e.button!==0||e.isPrimary===false||pointer!==null)return;e.preventDefault();pointer=e.pointerId;pointerBounds=$('draw').getBoundingClientRect();$('draw').setPointerCapture(pointer);if(tap&&holding)release();else hold();};
+$('draw').onpointermove=e=>{if(pointer!==e.pointerId||!holding)return;const r=pointerBounds;if(!r)return;if(e.clientX<r.left-10||e.clientX>r.right+10||e.clientY<r.top-12||e.clientY>r.bottom+12){cancel();$('receipt').textContent='已收弓，这次不算失手。';}};
+$('draw').onpointerup=e=>{if(pointer!==e.pointerId)return;pointer=null;if(!tap)release();};$('draw').onpointercancel=e=>{if(pointer===e.pointerId)cancel();};$('draw').onlostpointercapture=e=>{if(pointer===e.pointerId)cancel();};
 $('cancel').onclick=()=>{cancel();if(!result)$('receipt').textContent='已收弓，重新找准力道。';};$('tap').onclick=()=>{cancel();tap=!tap;$('tap').setAttribute('aria-pressed',String(tap));$('tap').textContent=tap?'切换按住操作':'切换轻点操作';$('draw').textContent=tap?'轻点拉弓':'按住拉弓';};
 window.addEventListener('keydown',e=>{if(e.code==='Escape'){cancel();return;}if(e.target.closest('input,select,textarea')||e.code!=='Space'||e.target.closest('button')&&e.target!==$('draw'))return;e.preventDefault();if(!e.repeat){if(tap&&holding)release();else hold();}});window.addEventListener('keyup',e=>{if(e.code==='Space'){e.preventDefault();if(!tap)release();}});
 function pause(){if(s.complete)return;cancel();paused=true;$('pause').hidden=false;band.update({state:'paused'});}window.addEventListener('blur',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});$('resume').onclick=()=>{paused=false;$('pause').hidden=true;last=performance.now();};

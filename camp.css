@@ -34,3 +34,20 @@ header>a:not(:first-child){font:12px system-ui;margin-left:0}header>a:nth-child(
 #draw,#draw *{-webkit-user-select:none!important;-moz-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-user-drag:none;touch-action:none}
 #aim,#aim *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .credits{grid-column:1/-1;text-align:center;font:12px/1.8 system-ui;color:#8490a0;padding:16px 0 4px}.credits span{padding:0 8px}.credits a{font:inherit;color:#667a93;text-decoration:underline;text-underline-offset:3px}
+
+/* Stable touch layout: details stay in place while the finger is on the bow. */
+body[data-play-state=drawing] #mission-details{visibility:hidden}
+#meter{contain:layout}
+button,a,summary{touch-action:manipulation}
+#draw{touch-action:none}
+@media(max-width:780px){
+ header>a:not(:first-child){min-width:44px;text-align:center}
+ .secondary>button,#aim-help>summary,#mission-details>summary{min-height:44px;min-width:44px}
+ #mission-details>summary{display:flex;align-items:center}
+ .npc-invite{padding-block:0}.npc-invite>summary{display:flex;align-items:center;min-height:44px}
+ #tap,#npc-other,#chapter-result button,#restart{min-height:44px;padding:10px 12px}
+ #save-panel section{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+ #reward-card a{min-height:44px;display:inline-flex;align-items:center}
+}
+
+.save-heading{position:sticky;top:-18px;z-index:1;background:#fffdf8;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #e0e4e9}.save-heading h2{margin:0}#save-panel .save-heading button{width:auto;flex-shrink:0;margin:0;font-size:13px}

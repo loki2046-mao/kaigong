@@ -8,3 +8,17 @@
 /* Daylight archive, matching the play screen. */
 body{background:linear-gradient(135deg,#e6ebf2,#f3f1ed);color:#34435a}body:before{opacity:.025}header{color:#758197;border-color:#cbd3de}a{color:#986345}.archive-hero{border-color:#ccd4df}.archive-hero>p:last-of-type{color:#768297}.kicker{color:#a27c59}#archive-tabs{background:#edf1f5f5;border-color:#cbd3de}#archive-tabs button{color:#758197}#archive-tabs button[aria-pressed=true]{color:#9b5640;background:#b7745420}.paper,.slot{background:#fffdf9;border-color:#d2d8e0;color:#34435a;box-shadow:0 10px 30px #53657d0b}.paper>p,.slot p,label{color:#7a8597}input,select{background:#f1f4f8;color:#34435a;border-color:#c9d3df}.chapter-tile{background:linear-gradient(145deg,#f2f5f9,#e4eaf2);border-color:#c7d2df}.chapter-tile small{color:#9e805b}.chapter-tile p{color:#7b899b}.star-score{color:#b08c51}.entry,.relic{background:#f0f3f7;border-color:#ccd6e2;color:#3b4e69}.entry p,.relic small{color:#7b899b}.entry.locked,.relic.locked{background:#edf0f4;color:#8995a6;border-color:#c7d1dd}.relic.selected{background:#f8eedb;border-color:#c39b5c}#loot-detail{background:#f8f2e7;border-color:#c49c62}#loot-detail h3,#loot-detail small{color:#977247}#loot-detail p,.record p{color:#7d8999}.record{border-color:#dae0e7}blockquote{color:#a17c4b}button{background:#3c506d;color:#fff;border-color:#3c506d}button:hover{background:#506987}button:disabled{background:#e1e7ef;color:#8a97a9;border-color:#ccd5e0}
 .credits{text-align:center;font:12px/1.8 system-ui;color:#8490a0;padding:24px 0 8px}.credits span{padding:0 8px}.credits a{color:#667a93;text-decoration:underline;text-underline-offset:3px}
+
+@media(max-width:600px){
+ main{padding:calc(12px + env(safe-area-inset-top)) 12px calc(20px + env(safe-area-inset-bottom))}
+ header{min-height:44px;align-items:center;padding-bottom:8px;letter-spacing:0}
+ header a{display:inline-flex;align-items:center;min-height:44px}
+ .archive-hero{padding:14px 0 12px}.archive-hero h1{font-size:30px;letter-spacing:4px;margin:4px 0}
+ .archive-hero p{font-size:12px;margin:6px 0}.archive-hero .kicker{font-size:10px}
+ .seal{top:20px;right:8px;font-size:17px;padding:5px}
+ #archive-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:6px 0;overflow:visible;top:env(safe-area-inset-top)}
+ #archive-tabs button{font-size:11px;padding:10px 0;min-width:0;min-height:44px}
+ input,select{font-size:16px}button,a,summary{touch-action:manipulation}
+ #slots{margin:16px 0;gap:10px}.slot{padding:14px}.slot h2{font-size:18px;margin:4px 0}.slot p{font-size:13px;margin:6px 0}
+ button,.primary{min-height:44px}
+}
