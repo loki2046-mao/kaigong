@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 8765 --bind 127.0.0.1",
-    "test": "node --test tools/check.mjs tools/audio-check.mjs tools/scene-check.mjs tools/camp-check.mjs"
+    "test": "node --test tools/check.mjs tools/audio-check.mjs tools/scene-check.mjs tools/camp-check.mjs tools/stats-check.mjs"
   },
   "devDependencies": {
     "linkedom": "0.18.13"

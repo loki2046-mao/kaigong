@@ -22,3 +22,7 @@ body{background:linear-gradient(135deg,#e6ebf2,#f3f1ed);color:#34435a}body:befor
  #slots{margin:16px 0;gap:10px}.slot{padding:14px}.slot h2{font-size:18px;margin:4px 0}.slot p{font-size:13px;margin:6px 0}
  button,.primary{min-height:44px}
 }
+
+.visit-stats{font:12px/1.8 system-ui;margin:12px auto 6px;max-width:440px;text-align:center}.visit-stats summary{cursor:pointer;min-height:44px;display:flex;align-items:center;justify-content:center;color:inherit;list-style:none}.visit-stats summary:before{content:none}.visit-stats p{font:11px/1.8 system-ui;margin:4px 0 12px;color:inherit;opacity:.85}
+
+.visit-stats summary{flex-direction:column;gap:2px}.visit-stats summary span{padding:0}

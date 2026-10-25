@@ -28,3 +28,7 @@ npx wrangler pages deploy release/public --project-name kaigong-loki --branch ma
 程序代码采用 [MIT License](LICENSE)。音效来源及 CC0 说明见 [audio/SOURCES.md](audio/SOURCES.md)。美术使用 AI 生成素材；第三方素材遵循各自授权，MIT 代码许可不替代素材授权。
 
 手机支持按住拉弓、松手出箭和轻点模式。拉弓操作区禁用文字选择及长按菜单；页面其他区域保留正常复制。
+
+## 访问统计
+
+正式站页脚显示今日与累计 UV/PV。按匿名浏览器标识去重，不上传游戏存档；实现、部署和指标局限见 [统计说明](stats-service/README.md)。移植项目需替换站点域名和 Cloudflare 绑定。

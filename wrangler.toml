@@ -1,0 +1,9 @@
+name = "kaigong-loki"
+compatibility_date = "2026-10-25"
+pages_build_output_dir = "./release/public"
+[[services]]
+binding = "STATS"
+service = "kaigong-visit-stats"
+[[env.production.services]]
+binding = "STATS"
+service = "kaigong-visit-stats"
