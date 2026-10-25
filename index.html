@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f2e9d6"><title>开弓｜不服，再来一箭</title><link rel="stylesheet" href="style.css?v=award-focus-1"></head>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f2e9d6"><title>开弓｜不服，再来一箭</title><link rel="stylesheet" href="style.css?v=oct25-polish3"><link rel="stylesheet" href="courtyard.css?v=oct25-polish3"></head>
 <body>
 <main id="app">
-<header class="topbar"><a class="wordmark" href="./" aria-label="开弓首页">开弓<span>校场见真章</span></a><button id="sound" class="round" aria-label="开启声音" aria-pressed="false">音</button></header>
+<header class="topbar"><a class="wordmark" href="./" aria-label="开弓首页">开弓<span>校场见真章</span></a><div class="audio-tools"><button id="sound" class="round" aria-label="开启声音" aria-pressed="false">开启声音</button><details class="audio-settings"><summary aria-label="声音设置">调音</summary><div><label for="music-volume">校场配乐 <output id="music-value">65%</output></label><input id="music-volume" type="range" min="0" max="100" value="65"><label for="effects-volume">弓箭音效 <output id="effects-value">80%</output></label><input id="effects-volume" type="range" min="0" max="100" value="80"></div></details></div></header>
 <section id="home" class="intro">
-<div class="eyebrow"><span></span>全营都在看着你</div>
-<h1>嘴上说能开。<br>来，<em>拉一个。</em></h1>
-<p id="home-copy">按住拉弓，松手出箭。<br>五十关，从近靶到骑射。<br>封号看过关，分数看箭法。</p>
+<div class="eyebrow"><span></span>一箭入魂 · 校场试炼</div>
+<h1>小小弓手，<br><em>也有大名堂。</em></h1>
+<p id="home-copy">从伙房门口，到封帅校场。<br>按住蓄力，抓准那一瞬，松手！</p>
 </section>
 <section id="hud" class="hud" hidden>
 <div class="score"><small>校场战绩</small><strong id="score">0</strong></div>
@@ -14,26 +14,33 @@
 <div class="lives"><small>还能失手</small><b id="lives" aria-label="剩余三次失手机会">◆ ◆ ◆</b></div>
 </section>
 <section id="expedition" class="expedition" hidden><div><span id="earned-rank">白身</span><b id="rank-goal">第 1 / 50 弓 → 伙头兵</b></div><div class="road"><i id="road-fill"></i></div></section>
+
 <div class="scene-wrap">
 <div id="scene-caption" class="scene-caption">一张弓，治好你的不服。</div>
-<canvas id="scene" width="1000" height="720" role="img" aria-label="小豆丁在校场射箭，小伙伴在场边加油。"></canvas>
+<canvas id="scene" width="1000" height="720" role="img" aria-label="少年弓手在秋日军营拉弓，伙头兵、教头、鼓手和文书围观。"></canvas>
 <div id="speech" class="speech" aria-live="polite">你说你能开？</div>
-<div id="feedback" class="feedback" aria-live="polite"></div>
-<div id="bow-tag" class="bow-tag" hidden><span id="bow-type">软弓</span><b id="bow-name">五斗弓</b></div>
-<div id="combo" class="combo" hidden>连中 <b>0</b></div>
+
+
+
 </div>
 <section id="home-actions" class="home-actions">
+<fieldset class="character-picker"><legend>选你的出战形象</legend><div class="character-options">
+<button id="character-male" type="button" aria-pressed="true"><i class="portrait male" aria-hidden="true"></i><span><b>男射手</b><small>青衣弓手 · 意气风发</small></span><em aria-hidden="true">✓</em></button>
+<button id="character-female" type="button" aria-pressed="false"><i class="portrait female" aria-hidden="true"></i><span><b>女射手</b><small>从军小兵 · 一路封将</small></span><em aria-hidden="true">✓</em></button>
+</div><p>形象随你选，箭法凭本事。</p></fieldset><div id="costume-journey" class="costume-journey" hidden><a href="tools/女将晋升.html" target="_blank">女将成长图鉴 ↗</a><span>1—20关 · 布衣从军</span><span>21—40关 · 玄甲领军</span><span>41—50关 · 银甲封将</span></div>
 <button id="start" class="primary">闯五十关 <span>↗</span></button>
-<div class="sub-actions"><button id="sprint">90 秒速挑战 <span>限时冲关</span></button><button id="fresh">从头练起 <span>第一关开始</span></button><button id="daily">今日怪弓 <span>同题比手</span></button><a href="./晋升.html">旧版试炼 <span>射柳·夜战·答题复活</span></a></div>
-<p class="footnote"><a href="./tools/试射校场.html">先试近靶／远靶／骑射 ↗</a></p>
-<p class="footnote">每五关存档 · 50关封将 · 满分22,500争无双</p>
+<div class="sub-actions"><button id="sprint">90 秒速挑战 <span>限时冲关</span></button><button id="fresh">从头练起 <span>第一关开始</span></button><button id="daily">今日怪弓 <span>同题比手</span></button><button id="practice">自在练弓 <span>无限重试 · 不计纪录</span></button></div>
+<a class="camp-entry" href="camp.html"><b>新篇 · 伙房借弓</b><span>打坛 · 断绳 · 破盾　↗</span></a><div class="journey-preview"><span><b>01</b> 伙房练手</span><i>→</i><span>追风骑射</span><i>→</i><span><b>50</b> 封帅大比</span></div>
+<p class="footnote">每五关存档 · 歇一歇，回来接着开</p>
 </section>
 <section id="controls" class="controls" hidden>
+<section id="chapter-brief" class="chapter-brief" hidden aria-label="本章任务"><div class="chapter-heading"><i id="chapter-emblem" aria-hidden="true"></i><span id="chapter-number"></span><strong id="chapter-name"></strong><b id="chapter-step"></b></div><p id="chapter-skill"></p><div id="chapter-stops" class="chapter-stops" aria-label="本章进度"></div></section>
+<div class="shot-header"><div id="bow-tag" class="bow-tag" hidden><span id="bow-type">软弓</span><b id="bow-name">五斗弓</b></div><div id="combo" class="combo" hidden>连中 <b>0</b></div></div><div class="shot-receipt"><p id="coach" class="coach">按住蓄力，看准色带再松手。</p><div id="feedback" class="feedback" aria-live="polite"></div></div>
 <div class="meter-head"><span id="instruction">进入红区可中，金区神射</span><span id="power">0%</span></div>
-<div id="meter" class="meter" role="meter" aria-label="当前弓力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="good-zone"></i><i id="perfect-zone"></i><b id="needle"></b><span class="meter-start">0</span><span class="meter-end">100</span></div>
+<div id="meter" class="meter" role="meter" aria-label="当前弓力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="good-zone"></i><i id="perfect-zone"></i><b id="needle"></b><i id="last-shot" hidden></i><span class="meter-start">0</span><span class="meter-end">100</span></div>
 <div class="legend"><span><i class="red"></i>稳稳中靶</span><span><i class="gold"></i>神射 +250</span></div>
 <button id="draw" class="primary draw">按住拉弓 <span>松手出箭</span></button>
-<div class="play-bottom"><button id="exit">收弓回营</button><span>电脑也可按住空格</span></div>
+<div class="play-bottom"><button id="exit">收弓回营</button><button id="input-mode" aria-pressed="false">切换轻点操作</button></div>
 </section>
 <section id="result" class="result" hidden>
 <div class="award-paper">
@@ -41,7 +48,7 @@
 <p id="edict-heading" class="edict-heading">御赐封赏</p>
 <div class="award-title"><span id="edict-grant" class="edict-grant">敕封</span><h2 id="result-title">白身</h2></div>
 <p id="edict-citation" class="edict-citation"></p>
-<div class="edict-footer"><canvas id="award-doodle" width="240" height="145" role="img" aria-label="小豆丁封赏插画"></canvas><div class="edict-sign"><b id="edict-seal">奉旨开弓</b></div></div>
+<div class="edict-footer"><canvas id="award-doodle" width="240" height="145" role="img" aria-label="少年弓手封赏插画"></canvas><div class="edict-sign"><b id="edict-seal">奉旨开弓</b></div></div>
 <p id="result-quote" class="result-quote"></p><p id="edict-reward" class="edict-reward"></p>
 <p class="award-signature">兵部校场司 録 · 御膳房会签</p>
 </div>
@@ -57,5 +64,5 @@
 <div id="pause" class="pause" hidden><div><p>弓先收好。</p><span id="pause-copy">回来再接着开。</span><button id="resume" class="primary">继续开弓</button></div></div>
 </main>
 <footer class="desktop-note"><span>校场不听吹牛。</span><span>只看这一箭。</span></footer>
-<script type="module" src="game.mjs?v=crowd-clear-1"></script>
+<script type="module" src="game.mjs?v=oct25-polish3"></script>
 </body></html>

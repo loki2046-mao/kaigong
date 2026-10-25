@@ -1,4 +1,4 @@
-import { RANKS } from './content.mjs?v=crowd-clear-1';
+import { RANKS } from './content.mjs?v=oct25-arrow1';
 export const DURATION = 90;
 export const GOAL = RANKS.length;
 export function rankFor(cleared) { return cleared ? RANKS[Math.min(GOAL,cleared)-1].title : '白身'; }
@@ -12,19 +12,21 @@ export function makeBow(index,seed){
  const radius=chapter===0?44-step*3:chapter===1?29-step:chapter===2?22-step*3:chapter===3?18-step:chapter===4?22-step*2:chapter===5?16-step*.6:Math.max(10,17-(chapter-6)*1.5-step*.5);
  const mounted=chapter===4||i===28||i===29||chapter===8||chapter===9&&step>=3,moving=chapter===3||i>=26&&i!==28;
  const speed=moving?.65+step*.16+(chapter>=5?.5+(chapter-5)*.08:0):type==='willow'?.5:0;
- const b={index:i,type,chapter,chapterName:CHAPTERS[chapter],distance,strength,radius,mounted,moving,speed,
+ const targetAmplitude=moving?(chapter===3?16+step*5.5:38):type==='willow'?12:0;
+ const rideAmplitude=mounted?(chapter===4?10+step*2:18):0;
+ const b={index:i,type,chapter,chapterName:CHAPTERS[chapter],distance,strength,radius,mounted,moving,speed,targetAmplitude,rideAmplitude,
  gain:i<3?31+(r%3):Math.max(21,31-chapter*1.4)+(r%2),wobble:type==='shaky'?3:0,wind:type==='wind'?5+chapter:0,phase:(r%628)/100,
  required:step===4?(i===49?3:2):1,bowName:RANKS[i].bowName.split(' · ')[0],rank:RANKS[i].title};
  Object.assign(b,zoneAt(b,makeDraw()));return b;
 }
 export function makeDraw(){return {raw:0,power:0,elapsed:0,rebound:false,arrow:0};}
 export function isAim(bow){return !!bow;}
-export function flightTime(bow){return .16+bow.distance*.0045;}
-export function riderOffset(bow,t){return bow?.mounted?Math.sin(t*4.2+bow.phase)*18:0;}
+export function flightTime(bow){return .15+bow.distance*.0019;}
+export function riderOffset(bow,t){return bow?.mounted?Math.sin(t*4.2+bow.phase)*(bow.rideAmplitude??18):0;}
 export function targetState(bow,draw,timeOffset=0){
  if(!bow)return {x:848,y:442,shotY:442};
- const t=(draw?.elapsed||0)+timeOffset,amp=bow.moving?38:bow.type==='willow'?12:0;
- return {x:500+(Math.min(135,bow.distance)-20)*3.2,y:442+Math.sin(t*bow.speed+bow.phase)*amp,shotY:landingY(bow,draw?.power||0,draw?.elapsed||0)};
+ const t=(draw?.elapsed||0)+timeOffset,amp=bow.targetAmplitude??(bow.moving?38:bow.type==='willow'?12:0);
+ return {x:500+(Math.min(135,bow.distance)-20)*3.2,y:(bow.targetY??442)+Math.sin(t*bow.speed+bow.phase)*amp,shotY:landingY(bow,draw?.power||0,draw?.elapsed||0)};
 }
 export function landingY(bow,power,t){
  // Fixed elevation: stronger bows lift the arrow; distance adds drop. Horse gait changes launch height.
@@ -54,3 +56,6 @@ export function titleFor(cleared){return rankFor(cleared);}
 
 export function maximumScore(from=0,to=GOAL){let arrows=0;for(let i=from;i<to;i++)arrows+=makeBow(i,'top').required;let total=0;for(let n=1;n<=arrows;n++)total+=points('perfect',n);return total;}
 export function mastery(score,from=0,misses=0){const top=maximumScore(from),ratio=Math.max(0,Math.min(1,score/top)),stars=ratio>=.95?5:ratio>=.85?4:ratio>=.7?3:ratio>=.5?2:1;return {top,ratio,stars,label:from===0&&score===top&&misses===0?'百发百中 · 无双神射':`${'★'.repeat(stars)}${'☆'.repeat(5-stars)} · ${['初成','熟练','精湛','卓绝','传奇'][stars-1]}`,gap:Math.max(0,top-score)};}
+
+// Costume progression uses completed levels, never power or score.
+export function femaleTierFor(cleared=0){return cleared>=40?2:cleared>=20?1:0;}

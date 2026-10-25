@@ -1,0 +1,3 @@
+// Renderer and event scheduler share the same ground contact time.
+export function lanternFall(targetY,age,reduced=false){const start=385+(targetY-442)*1.05+58,floor=500,distance=Math.max(0,floor-start),duration=Math.sqrt(2*distance/900),t=Math.max(0,age);const landed=t>=duration;const bounce=landed&&!reduced?Math.sin(Math.min(.25,t-duration)*Math.PI/.25)*5*Math.exp(-(t-duration)*9):0;return {duration,landed,y:reduced?floor:Math.min(floor,start+450*t*t)-bounce};}
+export function projectileFor(kind,hit){return hit?(kind==='jar'||kind==='rope'||kind==='latch'?'through':kind==='shield'?'fall':'embed'):'normal';}

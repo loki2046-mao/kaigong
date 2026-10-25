@@ -1,0 +1,13 @@
+{
+  "name": "kaigong",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8765 --bind 127.0.0.1",
+    "test": "node --test tools/check.mjs tools/audio-check.mjs tools/scene-check.mjs tools/camp-check.mjs"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.13"
+  }
+}
