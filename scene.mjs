@@ -110,7 +110,7 @@ export function drawScene(g,f){
    if(hit&&pose.arrived&&outcome==='perfect'&&!reduced)for(let i=0;i<8;i++){const a=i*Math.PI/4,r=12+impactAge*42;g.globalAlpha=Math.max(0,1-impactAge/.35);line(g,tx+Math.cos(a)*r,ty+Math.sin(a)*r,tx+Math.cos(a)*(r+5),ty+Math.sin(a)*(r+5),GOLD,3)}g.globalAlpha=1;
  }
 
- if((f.heckle||arrived)&&(outcome?arrived:power<1)){const speaker=(f.speaker??0)%crowd.length,[cx,cy,ch]=crowd[speaker],words=(f.heckle||(cheer?'好箭！再来！':'差一点，再试试！')).replace(/^[^：]+：/,''),rows=words.match(/.{1,11}/gu)||[],bw=350,bh=28+rows.length*33,bx=Math.max(18,Math.min(982-bw,cx-bw/2)),by=Math.max(255-bh,-worldShift/s+14);
+ if(!f.hideChatter&&(f.heckle||arrived)&&(outcome?arrived:power<1)){const speaker=(f.speaker??0)%crowd.length,[cx,cy,ch]=crowd[speaker],words=(f.heckle||(cheer?'好箭！再来！':'差一点，再试试！')).replace(/^[^：]+：/,''),rows=words.match(/.{1,11}/gu)||[],bw=350,bh=28+rows.length*33,bx=Math.max(18,Math.min(982-bw,cx-bw/2)),by=Math.max(255-bh,-worldShift/s+14);
  g.save();g.fillStyle='#fffaf0';g.strokeStyle='#c1ac87';g.lineWidth=2;g.beginPath();g.roundRect(bx,by,bw,bh,18);g.fill();g.stroke();g.beginPath();g.moveTo(Math.max(bx+20,Math.min(bx+bw-20,cx))-9,by+bh-1);g.lineTo(Math.max(bx+20,Math.min(bx+bw-20,cx)),by+bh+12);g.lineTo(Math.max(bx+20,Math.min(bx+bw-20,cx))+9,by+bh-1);g.fill();rows.forEach((row,i)=>text(g,row,bx+18,by+35+i*33,26));oval(g,cx,cy+4,22,3,'#b9a47c');g.restore()}
 
 

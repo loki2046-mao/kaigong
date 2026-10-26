@@ -69,3 +69,9 @@ header{width:100%;margin-bottom:12px;border-color:#b49b7040;min-height:60px;gap:
 
 /* Keep the full mounted silhouette inside the field on wide displays. */
 @media(min-width:781px){.arena canvas{height:auto;aspect-ratio:1.65}}
+
+/* One UI typeface on every platform; no serif fallbacks inside controls. */
+body,button,input,select,summary,a,h1,h2,h3,h4,p,small,strong,b,span,blockquote{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif!important}
+
+#reward-card{background:#29333e;border:1px solid #9d8256;color:#eadfc9;padding:10px 14px;gap:14px;margin:10px 0;max-width:100%}#reward-card h3{color:#f1d49d;font-size:16px}#reward-card small,#reward-card p{color:#b9c0c5}#reward-card a{color:#e2bd7b}#reward-icon{width:90px;height:60px;flex:0 0 90px}#reward-card details[open]{max-height:150px;overflow:auto}#chapter-result{background:#29333e;border-color:#9d8256}#chapter-result h3,#chapter-result-score{color:#e8c997}#chapter-result-best{color:#b9c0c5}#next{position:sticky;bottom:12px;z-index:3;min-height:52px;margin-top:8px;border:1px solid #cb8768;box-shadow:0 3px 10px #0005}#receipt{overflow-wrap:anywhere}#reward-card>div:last-child{min-width:0}#reward-card a{min-height:36px;display:inline-flex;align-items:center}#reward-card summary{color:#c9b992}
+@media(max-width:780px){#reward-card{flex-wrap:nowrap;padding:10px;gap:10px}#reward-icon{flex-basis:72px;width:72px;height:48px}#reward-card h3{font-size:14px}#reward-card>div:last-child{flex:1;min-width:0}#next{bottom:calc(8px + env(safe-area-inset-bottom))}}
