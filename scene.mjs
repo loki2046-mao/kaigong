@@ -43,6 +43,7 @@ const FIELD_PALETTES=[
  ['#edf3f4','#d9e4e4','#c0d4d7','#e4e9df','#f4f1e7'],
  ['#f4e8d9','#dfd3b6','#c8bd9c','#e0d7b6','#f1e4c9']
 ];
+export function fieldTransform(ratio,fit=false){const zoom=fit?Math.min(1,1.22/ratio):1,sy=ratio*zoom;return {x:500*(1-zoom),y:Math.min(535*(1-sy),704-690*sy),sx:zoom,sy};}
 export function drawScene(g,f){
  const {power=0,outcome=null,age=0,home=false}=f;
  const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -65,7 +66,7 @@ export function drawScene(g,f){
  }
  // Snow remains in the distant sky, above arrows and spectators.
  if(f.bow?.chapter===8)for(let i=0;i<18;i++){const sx=(i*137+Math.sin(t*.25+i)*12)%1000,sy=40+(i*53+(reduced?0:t*12))%260;oval(g,sx,sy,2,2,'#ffffff');}
- const worldShift=Math.min(base*(1-s),704-690*s);g.translate(0,worldShift);g.scale(1,s);
+ const transform=fieldTransform(s,f.fitWorld),worldShift=transform.y;g.translate(transform.x,worldShift);g.scale(transform.sx,transform.sy);
  const b=f.bow,target=targetState(b,f.draw,outcome?Math.min(age,f.shot?.flight||0):0);
  // Both impact and target use this same transform; rings remain faithful to judgement.
  const mapY=y=>base-150+(y-442)*1.05,tx=target.x,ty=mapY(target.y),radius=(b?.radius||44)*1.05;
