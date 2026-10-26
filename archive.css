@@ -27,9 +27,13 @@ body{background:linear-gradient(135deg,#e6ebf2,#f3f1ed);color:#34435a}body:befor
 
 .visit-stats summary{flex-direction:column;gap:2px}.visit-stats summary span{padding:0}
 
-/* One UI typeface on every platform; no serif fallbacks inside controls. */
-body,button,input,select,summary,a,h1,h2,h3,h4,p,small,strong,b,span,blockquote{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif!important}
+
 
 .relic-icon{display:block;position:relative;overflow:hidden;background-image:none!important;width:120px;height:auto;aspect-ratio:3/2;flex:none}.relic-icon img{position:absolute;display:block;width:800%;height:600%;max-width:none;object-fit:fill;pointer-events:none}#loot-detail .relic-icon{width:192px;height:auto;aspect-ratio:3/2;margin:0 auto 16px}
 @media(max-width:700px){#loot-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}.relic-icon{width:100%;height:auto;aspect-ratio:3/2}.relic{padding:10px 6px}.relic span{font-size:12px}#loot-detail{position:static;max-width:100%;padding:16px}#loot-detail .relic-icon{max-width:100%}}
 #loot-gallery{align-items:start}.relic-icon{margin:0 auto}.relic{min-height:150px;justify-content:flex-start}#loot-detail .relic-icon{margin:0 auto 16px}
+
+/* Display lettering is distinct from readable supporting copy. */
+:root{--display-font:"Kaiti SC","STKaiti","KaiTi","Songti SC","STSong","Noto Serif CJK SC",serif;--copy-font:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+body,button,input,select,summary{font-family:var(--copy-font)}h1,h2,h3,.brand-seal,.seal{font-family:var(--display-font)}
+.archive-hero h1,.paper>h2,.chapter-tile h3,.slot h2,#loot-detail h3,.relic>span{font-family:var(--display-font)}.relic>span{font-size:15px}#loot-detail h3{font-size:25px}
