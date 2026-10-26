@@ -1,34 +1,52 @@
-# 开弓 · 军营历练
+# 开弓
 
-制作：**赛博小熊猫 Loki**
+由赛博小熊猫 Loki 制作的古风网页射箭小游戏。手机和电脑均可游玩；长按拉弓，松手出箭，也支持轻点和键盘空格。
 
-[在线试玩](https://kaigong-loki.pages.dev/) · [GitHub 源码](https://github.com/loki2046-mao/kaigong)
+## V4 · 一箭有回响
 
-手机与电脑浏览器射箭游戏：十回五十关、三个档案、章节重挑战、NPC 委托、星级成绩与百宝收藏。
+- 十回五十关，练习精准、移动、骑射、开门与旗帘机关。
+- 旗靶可以直接穿旗，也可以先断帘绳；每回终试可选大靶或小靶。
+- 章节各有星级挑战；旧档案与旧星级保留。
+- 秋日军营、雪山边营、封帅演武场三组场景。
+- 三个本地存档、人物姓名、男女角色、十段人物叮嘱与纪念品。
+- 48 件藏品、来源线索、重复物兑换；三种有不同代价的箭具。
+- 三分钟同题试射，统一练习箭、独立计分，不改变主线进度。
+- 支持分享同题链接和下载战报图片。
+- 公共今日/累计访问统计；另提供不含身份信息的体验事件汇总。
 
-## 运行与测试
+## 开发与试玩
 
-需要 Node.js 和 Python 3。
+需要 Node.js、Python 3。字体、图片、声音随站点提供，游戏运行不依赖外部字体或图片服务。
 
 ```sh
-npm ci
+npm install
 npm test
-npm start
+node tools/build-public.mjs
+python3 -m http.server 8766 --bind 127.0.0.1
 ```
 
-打开 http://127.0.0.1:8765/camp.html 。进度保存在当前浏览器，换设备或域名不会自动迁移。
+打开 `http://127.0.0.1:8766/release/public/`，它与生产站使用相同入口。`camp.html` 是军营主线，`trial.html` 是短局入口，`archive.html` 是档案与收藏。
 
-## 发布
+浏览器验收（本机装有 Google Chrome）：
+
+```sh
+node tools/v4-browser-check.mjs
+node tools/v4-flow-check.mjs
+```
+
+测试使用独立浏览器上下文，不修改玩家存档。验证结果写入 `qa/v4/`。音效听感和真实手机/大陆网络仍需要相应设备测试，浏览器模拟不能替代这些验证。
+
+## 部署
 
 ```sh
 node tools/build-public.mjs
 npx wrangler pages deploy release/public --project-name kaigong-loki --branch main
 ```
 
-程序代码采用 [MIT License](LICENSE)。音效来源及 CC0 说明见 [audio/SOURCES.md](audio/SOURCES.md)。美术使用 AI 生成素材；第三方素材遵循各自授权，MIT 代码许可不替代素材授权。
+国内静态托管包：`node tools/build-cloudbase.mjs`。需要自行配置已备案域名、HTTPS 与托管服务，生成上传包不等于域名部署已完成。
 
-手机支持按住拉弓、松手出箭和轻点模式。拉弓操作区禁用文字选择及长按菜单；页面其他区域保留正常复制。
+首次启用 V4 体验统计时，先对已有 D1 数据库应用 `stats-service/experience-v4.sql`，再部署 Worker；只新增表，不修改原 UV/PV 计数。`insights.html` 展示汇总数据，指标单位为游戏页面会话中的事件，不能当作独立人数或精确流失率。
 
-## 访问统计
+## 素材与许可
 
-正式站页脚显示今日与累计 UV/PV。按匿名浏览器标识去重，不上传游戏存档；实现、部署和指标局限见 [统计说明](stats-service/README.md)。移植项目需替换站点域名和 Cloudflare 绑定。
+代码见 LICENSE。字体 Ma Shan Zheng 采用 SIL OFL，说明随 `fonts/` 分发。声音来源见 `audio/SOURCES.md`。V4 冬营和演武场背景为本项目生成的原创场景；人物和其他图像沿用项目素材。公开代码不包含账号密钥或玩家档案。

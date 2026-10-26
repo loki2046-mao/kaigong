@@ -1,0 +1,2 @@
+import{test}from'node:test';import assert from'node:assert/strict';import{fieldTransform}from'../scene.mjs';
+test('wide and short fields retain mounted head, bounce and spectator feet without distortion',()=>{for(const [w,h]of [[1070,440],[1070,320],[1070,180],[366,290],[366,217]]){const ratio=w*720/h/1000,t=fieldTransform(ratio,true);assert.ok(t.y+235*t.sy>110,'head clears HUD');assert.ok(t.y+696*t.sy<=720,'feet visible');assert.ok(Math.abs(t.sx*w/1000-t.sy*h/720)<1e-9,'uniform physical scale');}});

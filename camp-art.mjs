@@ -9,7 +9,10 @@ function sprite(g,key,x,y,w,h){if(!atlas?.complete||!atlas.naturalWidth)return f
 const line=(g,x,y,a,b,w=3)=>{g.lineWidth=w;g.beginPath();g.moveTo(x,y);g.lineTo(a,b);g.stroke();};
 export function paintCampTarget(kind,bodyHit=false,targetY=442,mechanism={}){return(g,{x,y,radius:r,base,arrived,hit,impactAge,reduced})=>{
  const broken=arrived&&hit,t=Math.max(0,impactAge);g.save();g.strokeStyle='#806044';
- if(['latch','gate','flag'].includes(kind)){
+ if(kind==='flagcord'){
+ paintMechanism(g,{kind:'flag',x,y:y+55,radius:30,base,broken,age:t,open:broken,reduced,straw});
+ if(!broken){g.strokeStyle='#ffe3a0';line(g,x,y-35,x,y+10,3);g.beginPath();g.arc(x,y,r,0,Math.PI*2);g.stroke();line(g,x-5,y-5,x+5,y+5,4);line(g,x+5,y-5,x-5,y+5,4);}
+ }else if(['latch','gate','flag'].includes(kind)){
  paintMechanism(g,{kind,x,y,radius:r,base,broken,age:t,open:mechanism.open,reduced,straw});
  }else if(kind==='rope'){
  line(g,x-65,base,x-65,y-80,9);line(g,x-65,y-80,x+18,y-80,7);g.strokeStyle='#d1ba8c';line(g,x,y-80,x,y-8);

@@ -30,7 +30,7 @@ export function targetState(bow,draw,timeOffset=0){
 }
 export function landingY(bow,power,t){
  // Fixed elevation: stronger bows lift the arrow; distance adds drop. Horse gait changes launch height.
- const drop=bow.distance*.62/bow.strength,wind=bow.wind?Math.sin(t*1.5+bow.phase)*7:0;
+ const drop=bow.distance*.62/bow.strength,wind=bow.wind?Math.sin(t*1.5+bow.phase)*7*(bow.windScale??1):0;
  return 580+drop-power*2.5*bow.strength+riderOffset(bow,t)+wind;
 }
 export function zoneAt(bow,draw=makeDraw()){

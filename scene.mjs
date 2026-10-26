@@ -4,11 +4,12 @@ const assetRoot=typeof location!=='undefined'&&location.pathname.includes('/tool
 function loadAsset(name){if(typeof Image==='undefined')return null;const im=new Image();im.src=assetRoot+'art/'+name;return im;}
 const characterAssets=new Map();function characterAsset(name){if(!characterAssets.has(name))characterAssets.set(name,loadAsset(name));return characterAssets.get(name)}
 
+const backgrounds=new Map();function fieldAsset(theme){if(!theme||theme==='autumn')return backdrop;const name='camp-'+theme+'-v4.webp';if(!backgrounds.has(name))backgrounds.set(name,loadAsset(name));return backgrounds.get(name);}
 const atlas=loadAsset('archer-cast-v2.webp'),backdrop=loadAsset('camp-autumn-v2.webp'),targetArt=loadAsset('target-straw-v2.webp');
 // Source rectangles preserve separate identities and never change NPC on a hit.
 const sprites=[[0,0,384,508],[384,0,392,508],[776,0,380,516],[1156,0,380,516],[0,512,384,512],[384,512,384,512],[768,520,384,504],[1152,520,384,504]];
 export function line(g,x,y,a,b,c=INK,w=3){g.beginPath();g.moveTo(x,y);g.lineTo(a,b);g.strokeStyle=c;g.lineWidth=w;g.lineCap='round';g.stroke()}
-export function text(g,s,x,y,size=20,c=INK){g.fillStyle=c;g.font=`600 ${size}px system-ui`;g.fillText(s,x,y)}
+export function text(g,s,x,y,size=20,c=INK){g.fillStyle=c;g.font=`400 ${size}px KaigongDisplay, serif`;g.fillText(s,x,y)}
 function oval(g,x,y,rx,ry,c){g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fillStyle=c;g.fill()}
 function sprite(g,n,x,y,h,tilt=0,character='male',released=false,tier=1){const staged=character==='female'&&n<4;const recruitAtlas=staged&&tier===0?characterAsset('recruit-female-v1.webp'):null,silverAtlas=staged&&tier===2?characterAsset('silver-female-v1.webp'):null,femaleAtlas=staged&&tier===1?characterAsset('general-female-v2.webp'):null,releaseAtlas=released&&!staged?characterAsset('archer-release-v1.webp'):null;const sheet=staged?(tier===2?silverAtlas:tier===1?femaleAtlas:recruitAtlas):released&&releaseAtlas?.complete&&releaseAtlas.naturalWidth?releaseAtlas:character==='female'&&n<4?femaleAtlas:atlas;if(!sheet?.complete||!sheet.naturalWidth)return;let rect=sprites[n];if(staged){const cell=(n>=2?3:0)+(released?2:n%2),w=sheet.naturalWidth/3,h=sheet.naturalHeight/2;rect=[cell%3*w,Math.floor(cell/3)*h,w,h];}if(!staged&&sheet===releaseAtlas){const halfW=sheet.naturalWidth/2,halfH=sheet.naturalHeight/2;const cell=sheet===releaseAtlas?(n>=2?2:0)+(character==='female'?1:0):n;rect=[cell%2*halfW,Math.floor(cell/2)*halfH,halfW,halfH];}if(staged&&tier===0&&n<2)rect[3]=490;
 if(!staged&&!released&&n===2)rect=[748,0,404,520];
@@ -47,6 +48,7 @@ if(staged&&tier===2&&n===1&&!released){
 if(!staged&&sheet===releaseAtlas&&n<2){
  g.beginPath();[[0,0],[1,0],[1,1],[.78,1],[.78,.96],[.66,.96],[.66,1],[0,1]].forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px*w,-h+py*h));g.closePath();g.clip();
 }
+if(!staged&&sheet===releaseAtlas&&n>=2){g.beginPath();[[0,0],[1,0],[1,.46],[.97,.46],[.97,1],[0,1]].forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px*w,-h+py*h));g.closePath();g.clip();}
 g.drawImage(sheet,sx,sy,sw,sh,-w/2,-h,w,h);g.restore()}
 // A single trajectory supplies both arrow position and its tangent.
 export function arrowPose(from,shot,age,hit,floor=Infinity){
@@ -90,19 +92,22 @@ export function drawScene(g,f){
  oval(g,775,95,28,28,'#f8edbd');
  for(let i=0;i<3;i++){const x=100+i*355+Math.sin(t*.06+i)*25,y=95+i%2*90;oval(g,x,y,58,9,'#fbfcf5');oval(g,x-15,y-7,26,12,'#fbfcf5')}
  hill(g,340,palette[1],0);hill(g,375,palette[2],30);hill(g,423,palette[3],0);hill(g,480,palette[4],15);
- if(backdrop?.complete&&backdrop.naturalWidth){
-   const iw=backdrop.naturalWidth,ih=backdrop.naturalHeight||iw/1.5,ratio=1000/720*s;
+ const sceneBackdrop=fieldAsset(f.theme),bg=sceneBackdrop?.complete&&sceneBackdrop.naturalWidth?sceneBackdrop:backdrop;
+ if(bg?.complete&&bg.naturalWidth){
+   const iw=bg.naturalWidth,ih=bg.naturalHeight||iw/1.5,ratio=1000/720*s;
    let sw=iw,sh=ih;if(iw/ih>ratio)sw=ih*ratio;else sh=iw/ratio;
-   g.drawImage(backdrop,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1000,720);
-   if(f.bow?.chapter>=5){g.save();g.fillStyle=f.bow.chapter===8?'rgba(51,81,105,.22)':'rgba(124,49,17,.09)';g.fillRect(0,0,1000,720);g.restore();}
+   g.drawImage(bg,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1000,720);
+   if(!f.theme&&f.bow?.chapter>=5){g.save();g.fillStyle=f.bow.chapter===8?'rgba(51,81,105,.22)':'rgba(124,49,17,.09)';g.fillRect(0,0,1000,720);g.restore();}
  }
  // Falling leaves drift outside the target corridor; their cadence never signals hit timing.
- if(!reduced&&f.bow?.chapter!==8)for(let i=0;i<9;i++){
+ if(!reduced&&(!f.theme||f.theme==='autumn')&&f.bow?.chapter!==8)for(let i=0;i<9;i++){
    const lx=(i*143+t*(12+i%3*3))%1040-20,ly=(i*67+t*(8+i%4))%390;
    g.save();g.translate(lx,ly);g.rotate(t*.6+i);g.globalAlpha=.65;oval(g,0,0,3,7,i%2?'#d69937':'#e2b156');g.restore();
  }
  // Snow remains in the distant sky, above arrows and spectators.
  if(f.bow?.chapter===8)for(let i=0;i<18;i++){const sx=(i*137+Math.sin(t*.25+i)*12)%1000,sy=40+(i*53+(reduced?0:t*12))%260;oval(g,sx,sy,2,2,'#ffffff');}
+ // Wind pennant follows the same signed gust used by the landing calculation.
+ if(f.bow?.wind){const gust=Math.sin((f.draw?.elapsed||0)*1.5+f.bow.phase);line(g,910,170,910,270,'#5b4938',5);g.save();g.fillStyle='#b6533c';g.beginPath();g.moveTo(910,175);g.quadraticCurveTo(910+gust*35,185,910+gust*76,188);g.lineTo(910+gust*62,209);g.quadraticCurveTo(910+gust*25,204,910,198);g.fill();g.restore();}
  const transform=fieldTransform(s,f.fitWorld),worldShift=transform.y;g.translate(transform.x,worldShift);g.scale(transform.sx,transform.sy);
  const b=f.bow,target=targetState(b,f.draw,outcome?Math.min(age,f.shot?.flight||0):0);
  // Both impact and target use this same transform; rings remain faithful to judgement.
@@ -133,10 +138,13 @@ export function drawScene(g,f){
  }
  g.restore();
  const ride=b?.mounted&&!home,bob=ride?riderOffset(b,f.draw?.elapsed||0)*.8:0,h=ride?260:245,x=215,y=base+bob;
- oval(g,x,base+5,ride?69:29,5,'#dcd1b8');const squeeze=!reduced&&!outcome?Math.min(1,power/100)*.035:0;g.save();g.translate(x-(outcome&&!reduced?Math.sin(Math.min(1,age/.14)*Math.PI)*3:0),y);g.scale(1+squeeze*.5,1-squeeze);sprite(g,ride?(!outcome&&power>5?3:2):(!outcome&&power>5?1:0),0,0,h,power>70&&!reduced?Math.sin(t*22)*.012:0,f.character,!!outcome,f.outfitTier??femaleTierFor(f.bow?.index??0));g.restore();
+ oval(g,x,base+5,ride?69:29,5,'#42302144');const squeeze=!reduced&&!outcome?Math.min(1,power/100)*.035:0;g.save();g.translate(x-(outcome&&!reduced?Math.sin(Math.min(1,age/.14)*Math.PI)*3:0),y);g.scale(1+squeeze*.5,1-squeeze);sprite(g,ride?(!outcome&&power>5?3:2):(!outcome&&power>5?1:0),0,0,h,power>70&&!reduced?Math.sin(t*22)*.012:0,f.character,!!outcome,f.outfitTier??femaleTierFor(f.bow?.index??0));g.restore();
  if(ride)for(let i=0;i<3;i++){const k=(t*1.5+i/3)%1;g.globalAlpha=(1-k)*.25;oval(g,x-58-k*45,base-2-k*8,5+k*8,3+k*3,'#c3b795')}g.globalAlpha=1;
  g.save();g.fillStyle='#f8e9cbdd';g.beginPath();g.roundRect(tx-36,base+16,72,27,6);g.fill();text(g,`${b?.distance||20} 步`,tx-23,base+35,17,'#664a2d');g.restore();
- if(!home&&!outcome){g.setLineDash([3,9]);g.globalAlpha=.35;line(g,tx-58,mapY(target.shotY),tx+25,mapY(target.shotY),'#897e65',2);g.setLineDash([]);g.globalAlpha=1}
+ if(!home&&!outcome&&power>1){g.setLineDash([3,9]);g.globalAlpha=.35;line(g,tx-58,mapY(target.shotY),tx+25,mapY(target.shotY),'#897e65',2);g.setLineDash([]);g.globalAlpha=1}
+ if(!home&&!outcome&&f.holding&&power>1){const ly=mapY(target.shotY),aligned=Math.abs(target.shotY-target.y)<=b.radius;g.save();g.strokeStyle=aligned?'#ffe4a2':'#f7eee0';g.globalAlpha=.8;g.lineWidth=2;g.beginPath();g.arc(tx,Math.max(230,Math.min(560,ly)),7,0,Math.PI*2);g.stroke();g.restore();}
+ if(arrived&&!cheer&&f.shot&&impactAge<.8){g.save();g.strokeStyle='#f0be8a';g.globalAlpha=Math.max(0,1-impactAge/.8);const my=mapY(f.shot.shotY);line(g,tx-7,my-7,tx+7,my+7,'#f0be8a',2);line(g,tx+7,my-7,tx-7,my+7,'#f0be8a',2);g.restore();}
+ if(f.campMemories>=1){g.save();g.globalAlpha=.85;line(g,17,base+38,17,base+94,'#71563c',3);g.fillStyle='#a34e3d';g.beginPath();g.moveTo(17,base+38);g.lineTo(55,base+42);g.lineTo(43,base+53);g.lineTo(17,base+55);g.fill();g.restore();}
  if(outcome&&f.shot){
    const from={x:x+(f.character==='female'?108:ride?90:92),y:y-h*(f.character==='female'?(ride?.80:.67):(ride?.72:.58))};
    const hit=outcome==='good'||outcome==='perfect'||!!f.obstacleHit,pass=hit&&f.projectileMode==='through',pose=arrowPose(from,{x:f.shot.x,y:mapY(f.shot.shotY),flight:f.shot.flight},age,hit&&!pass,base+12);if(hit&&f.projectileMode==='fall'&&pose.arrived){const fallAge=Math.max(0,age-f.shot.flight);pose.x+=Math.min(70,fallAge*80);pose.y=Math.min(base+10,pose.y+fallAge*fallAge*420);pose.angle+=Math.min(1.1,fallAge*2);pose.grounded=pose.y>=base+10;}

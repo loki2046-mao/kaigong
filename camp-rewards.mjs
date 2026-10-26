@@ -1,9 +1,10 @@
+import {chapterScore} from './camp-challenge.mjs';
 export const QUESTS=[{id:'cook',npc:'伙头兵',title:'新酒待客',story:'帮我击碎三只旧空坛，新酒就有地方放了。',kind:'jar',goal:3,reward:'伙房贵客'},{id:'guard',npc:'营门哨长',title:'灯火归营',story:'替晚归的弟兄卸下两盏旧灯，只射绳结。',kind:'rope',goal:2,reward:'灯火守望'},{id:'coach',npc:'骑射教头',title:'马上见真章',story:'在马背上命中五箭，让大家看看你的稳劲。',kind:'mounted',goal:5,reward:'马上神射'}];
 QUESTS.push(
  {id:'cook2',requires:'cook',npc:'伙头兵',title:'席前试弓',story:'酒坛收拾好了。再替我打中四次圆靶，给开席助助兴。',kind:'disc',goal:4,reward:'席间神箭'},
  {id:'guard2',requires:'guard',npc:'营门哨长',title:'开门迎归人',story:'旧灯卸下来了。再替我射断两次门闩绳，迎弟兄归营。',kind:'latch',goal:2,reward:'归营引路人'},
  {id:'coach2',requires:'coach',npc:'骑射教头',title:'穿旗定心',story:'马步稳了，再穿过三次开合旗靶，练一练眼力与耐心。',kind:'flag',goal:3,reward:'穿旗定心'});
 export function questAvailable(p,q){return !q.requires||!!p.quests?.[q.requires]?.claimed;}
-export function chapterStars(profile,index){const rows=Array.from({length:5},(_,n)=>profile.records[index*5+n]);if(rows.some(r=>!r?.finished))return profile.bestChapters?.[index]?.stars||0;const shots=rows.reduce((n,r)=>n+r.shots,0),hits=rows.reduce((n,r)=>n+r.hits,0),perfect=rows.reduce((n,r)=>n+r.perfect,0);return Math.max(profile.bestChapters?.[index]?.stars||0,1+Number(hits/shots>=.8)+Number(hits/shots>=.8&&perfect>=3));}
+export function chapterStars(profile,index){return Math.max(profile.bestChapters?.[index]?.stars||0,chapterScore(profile.records,index)?.stars||0);}
 export function titlesFor(p){return ['初入军营',...QUESTS.filter(q=>p.quests?.[q.id]?.claimed).map(q=>q.reward),...(Array.from({length:10},(_,i)=>chapterStars(p,i)).some(n=>n===3)?['三星彩弓']:[]),...(p.progress?.complete?['封帅归来']:[])];}
 export function questHit(p,result,kind,mounted){if(!result.hit)return;for(const q of QUESTS){const state=p.quests?.[q.id];if(state&&!state.claimed&&(q.kind===kind||q.kind==='mounted'&&mounted))state.count=Math.min(q.goal,(state.count||0)+1);}}

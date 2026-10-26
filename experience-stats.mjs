@@ -1,0 +1,4 @@
+// Coarse counters only: no account, profile name, shots, or visit history is sent.
+const allowed=new Set(['ready','first_input','first_hit','first_three','chapter','trial_complete','retry']);
+const sent=new Set();
+export function experienceEvent(name){if(!allowed.has(name)||sent.has(name))return;sent.add(name);try{const key='kg-experience-v4',data=JSON.parse(localStorage.getItem(key)||'{}');data[name]=(data[name]||0)+1;localStorage.setItem(key,JSON.stringify(data));}catch{}if(typeof location==='undefined'||!['kaigong-loki.pages.dev','kaigong.hiloki.cn'].includes(location.hostname))return;try{fetch((location.hostname==='kaigong-loki.pages.dev'?'/api/visits':'https://kaigong-visit-stats.lokimao0426.workers.dev')+'/experience',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,id:crypto.randomUUID()}),keepalive:true}).catch(()=>{});}catch{}}
