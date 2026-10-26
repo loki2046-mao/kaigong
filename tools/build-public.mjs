@@ -1,6 +1,6 @@
 import{mkdir,copyFile,writeFile,readdir,readFile,appendFile,rm}from'node:fs/promises';
 const out=new URL('../release/public/',import.meta.url),root=new URL('../',import.meta.url);await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
-for(const name of await readdir(root))if(name.endsWith('.mjs')||['camp.html','camp.css','archive.html','archive.css','trial.html','trial.css','insights.html'].includes(name))await copyFile(new URL(name,root),new URL(name,out));
+for(const name of await readdir(root))if(name.endsWith('.mjs')||['ui-system.css','camp.html','camp.css','archive.html','archive.css','trial.html','trial.css','insights.html'].includes(name))await copyFile(new URL(name,root),new URL(name,out));
 await mkdir(new URL('art/',out),{recursive:true});for(const name of await readdir(new URL('art/',root)))if(name.endsWith('.webp'))await copyFile(new URL('art/'+name,root),new URL('art/'+name,out));
 await mkdir(new URL('fonts/',out),{recursive:true});for(const name of await readdir(new URL('fonts/',root)))await copyFile(new URL('fonts/'+name,root),new URL('fonts/'+name,out));
 await mkdir(new URL('audio/',out),{recursive:true});for(const name of ['horse-path-loop.mp3','pot-break.mp3','SOURCES.md'])await copyFile(new URL('audio/'+name,root),new URL('audio/'+name,out));
