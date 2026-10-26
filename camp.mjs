@@ -6,7 +6,7 @@ import {loadProfiles,persistProfiles,recordShot} from './camp-profile.mjs';
 import {lanternFall,projectileFor} from './camp-effects.mjs';
 import {createCamp,campBow,campTarget,campJudge,settleCamp,nextMission,MISSIONS,TARGETS,CHAPTER_NAMES,flagOpen} from './camp-engine.mjs';
 import {makeDraw,advanceDraw,zoneAt,flightTime} from './engine.mjs?v=camp-profile9';
-import {drawScene} from './scene.mjs?v=fit26';
+import {drawScene} from './scene.mjs?v=silver-frame30';
 import {paintCampTarget} from './camp-art.mjs?v=camp-profile9';
 import {createSoundscape} from './audio.mjs?v=camp-profile9';
 const nodes=new Map(),$=id=>nodes.get(id)||(nodes.set(id,document.getElementById(id)),nodes.get(id)),canvas=$('scene'),g=canvas.getContext('2d');let s=createCamp(),bow=campBow(s),draw=makeDraw(),result=null,age=0,settled=false,groundPlayed=false,resultPresented=false,holding=false,tap=false,paused=false,pointer=null,last=performance.now(),t=0;

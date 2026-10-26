@@ -1,6 +1,6 @@
 import { femaleTierFor, DURATION, GOAL, rankFor, TYPES, makeBow, makeDraw, advanceDraw, judge, points, titleFor, seedNumber, isAim, zoneAt, targetState, flightTime, maximumScore, mastery } from './engine.mjs?v=oct25-polish3';
 import { RANKS, HECKLES, createCrowdPicker, imperialReport, TALES, REVIVE_RIDDLES } from './content.mjs?v=oct25-polish3';
-import { drawScene, text, line } from './scene.mjs?v=oct25-polish3';
+import { drawScene, text, line } from './scene.mjs?v=silver-frame30';
 import { createSoundscape } from './audio.mjs?v=oct25-polish3';
 import { drawAwardDoodle, posterCanvas } from './award.mjs?v=oct25-polish3';
 const $ = id => document.getElementById(id);
