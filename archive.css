@@ -37,3 +37,6 @@ body{background:linear-gradient(135deg,#e6ebf2,#f3f1ed);color:#34435a}body:befor
 :root{--display-font:"Kaiti SC","STKaiti","KaiTi","Songti SC","STSong","Noto Serif CJK SC",serif;--copy-font:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
 body,button,input,select,summary{font-family:var(--copy-font)}h1,h2,h3,.brand-seal,.seal{font-family:var(--display-font)}
 .archive-hero h1,.paper>h2,.chapter-tile h3,.slot h2,#loot-detail h3,.relic>span{font-family:var(--display-font)}.relic>span{font-size:15px}#loot-detail h3{font-size:25px}
+
+@font-face{font-family:KaigongDisplay;src:url('fonts/kaigong-display.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}:root{--display-font:KaigongDisplay,"Kaiti SC","STKaiti",serif}
+.archive-hero h1,.paper h2,.paper h3,.relic>span{font-family:var(--display-font)!important;font-weight:400}
