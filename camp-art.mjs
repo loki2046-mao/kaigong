@@ -1,9 +1,10 @@
+import {PROP_RECTS} from './atlas-art.mjs?v=frames31';
 import {paintMechanism} from './mechanism-art.mjs?v=art7';
 import {lanternFall} from './camp-effects.mjs';
 const atlas=typeof Image!=='undefined'?new Image():null,straw=typeof Image!=='undefined'?new Image():null;
 if(atlas)atlas.src=new URL('./art/camp-props-v1.webp',import.meta.url).href;
 if(straw)straw.src=new URL('./art/target-straw-v2.webp',import.meta.url).href;
-const rects={jar:[20,25,490,490],rope:[560,10,420,560],shield:[1030,20,490,500],jarBroken:[10,535,515,465],ropeBroken:[550,580,450,410],shieldBroken:[1025,530,505,475]};
+const rects=PROP_RECTS;
 function sprite(g,key,x,y,w,h){if(!atlas?.complete||!atlas.naturalWidth)return false;g.drawImage(atlas,...rects[key],x-w/2,y-h/2,w,h);return true;}
 const line=(g,x,y,a,b,w=3)=>{g.lineWidth=w;g.beginPath();g.moveTo(x,y);g.lineTo(a,b);g.stroke();};
 export function paintCampTarget(kind,bodyHit=false,targetY=442,mechanism={}){return(g,{x,y,radius:r,base,arrived,hit,impactAge,reduced})=>{

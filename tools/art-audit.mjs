@@ -1,0 +1,9 @@
+import {paintCharacter} from '../scene.mjs?v=audit31';
+import {atlasIcon,RELIC_RECTS,PROP_RECTS} from '../atlas-art.mjs?v=frames31';
+import {TRINKETS} from '../camp-loot.mjs';
+const grid=document.querySelector('#grid');let frames=[];
+function card(name){const f=document.createElement('figure'),t=document.createElement('figcaption');t.textContent=name;f.append(t);grid.append(f);return f}
+function characters(){grid.replaceChildren();frames=[];for(const [character,tier,label] of [['female',0,'新兵'],['female',1,'朱甲'],['female',2,'银甲'],['male',0,'男弓手']])for(const mounted of [false,true])for(const phase of [0,1,2]){const c=document.createElement('canvas');c.width=368;c.height=440;card(label+(mounted?'骑射':'站射')+['待机','拉弓','离弦'][phase]).append(c);frames.push({c,character,tier,n:(mounted?2:0)+(phase===1?1:0),released:phase===2})}for(let n=4;n<8;n++){const c=document.createElement('canvas');c.width=368;c.height=440;card('围观人物'+(n-3)).append(c);frames.push({c,character:'male',tier:0,n,released:false})}}
+function icons(type){frames=[];grid.replaceChildren();for(const [i,r] of (type==='relics'?RELIC_RECTS:Object.values(PROP_RECTS)).entries()){const d=document.createElement('div');d.className='icon';card(type==='relics'?TRINKETS[i].name:Object.keys(PROP_RECTS)[i]).append(d);atlasIcon(d,'../art/'+(type==='relics'?'relics-v1.webp':'camp-props-v1.webp'),r)}if(type==='props')for(const [name,rect]of [['门框',[0,0,645,1005]],['闸门',[650,215,405,680]],['旗帘',[1120,215,400,700]]]){const d=document.createElement('div');d.className='icon';card(name).append(d);atlasIcon(d,'../art/mechanisms-v1.webp',rect)}}
+characters();for(const id of ['characters','relics','props'])document.getElementById(id).onclick=()=>id==='characters'?characters():icons(id);
+function tick(){for(const f of frames){const g=f.c.getContext('2d');g.clearRect(0,0,368,440);paintCharacter(g,f.n,184,405,335,0,f.character,f.released,f.tier)}requestAnimationFrame(tick)}tick();

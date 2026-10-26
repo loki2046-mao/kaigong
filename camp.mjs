@@ -1,3 +1,4 @@
+import {atlasIcon,RELIC_RECTS} from './atlas-art.mjs?v=frames31';
 import {chapterUnlocked,chapterScore,finishChapter} from './camp-challenge.mjs';
 import {aimCue} from './aim-ui.mjs';
 import {grantLoot,TRINKETS} from './camp-loot.mjs';
@@ -6,8 +7,8 @@ import {loadProfiles,persistProfiles,recordShot} from './camp-profile.mjs';
 import {lanternFall,projectileFor} from './camp-effects.mjs';
 import {createCamp,campBow,campTarget,campJudge,settleCamp,nextMission,MISSIONS,TARGETS,CHAPTER_NAMES,flagOpen} from './camp-engine.mjs';
 import {makeDraw,advanceDraw,zoneAt,flightTime} from './engine.mjs?v=camp-profile9';
-import {drawScene} from './scene.mjs?v=silver-frame30';
-import {paintCampTarget} from './camp-art.mjs?v=camp-profile9';
+import {drawScene} from './scene.mjs?v=atlas31';
+import {paintCampTarget} from './camp-art.mjs?v=atlas31';
 import {createSoundscape} from './audio.mjs?v=camp-profile9';
 const nodes=new Map(),$=id=>nodes.get(id)||(nodes.set(id,document.getElementById(id)),nodes.get(id)),canvas=$('scene'),g=canvas.getContext('2d');let s=createCamp(),bow=campBow(s),draw=makeDraw(),result=null,age=0,settled=false,groundPlayed=false,resultPresented=false,holding=false,tap=false,paused=false,pointer=null,last=performance.now(),t=0;
 // Keep layout reads out of the animation loop; resize notifications refresh the ratio.
@@ -42,7 +43,7 @@ let character='female',muted=false;try{character=JSON.parse(localStorage.getItem
 character=profile.character||character;
 const band=createSoundscape(()=>muted);
 let questIndex=Math.max(0,QUESTS.findIndex(q=>!profile.quests?.[q.id]?.claimed));
-function showReward(item,heading='关卡奖励'){if(!item)return;$('report-open').hidden=false;$('reward-card').hidden=false;$('reward-name').textContent=heading+' · '+item.name;$('reward-description').textContent=item.story;const i=TRINKETS.indexOf(item);$('reward-icon').style.backgroundPosition=`${i%8*100/7}% ${Math.floor(i/8)*20}%`;if(!result){$('detail-dialog').close();openResult();}}
+function showReward(item,heading='关卡奖励'){if(!item)return;$('report-open').hidden=false;$('reward-card').hidden=false;$('reward-name').textContent=heading+' · '+item.name;$('reward-description').textContent=item.story;const i=TRINKETS.indexOf(item);atlasIcon($('reward-icon'),'art/relics-v1.webp',RELIC_RECTS[i],item.name);if(!result){$('detail-dialog').close();openResult();}}
 function updateQuest(){const ready=QUESTS.findIndex(q=>questAvailable(profile,q)&&profile.quests?.[q.id]?.count>=q.goal&&!profile.quests[q.id].claimed);if(ready>=0)questIndex=ready;if(!questAvailable(profile,QUESTS[questIndex])||profile.quests?.[QUESTS[questIndex].id]?.claimed){const next=QUESTS.findIndex(q=>questAvailable(profile,q)&&!profile.quests?.[q.id]);if(next>=0)questIndex=next;}const q=QUESTS[questIndex],state=profile.quests?.[q.id];$('npc-name').textContent=q.npc+' · '+q.title;$('npc-story').textContent=state?.claimed?'这份人情我记下了。称号已经交给你，继续练弓吧。':state?.count>=q.goal?'办得漂亮！来，把谢礼带上。':q.story;$('npc-action').textContent=state?.claimed?'已领取谢礼':!state?'接下委托':state.count>=q.goal?'领取谢礼':'委托进行中';const active=QUESTS.filter(q=>profile.quests?.[q.id]&&!profile.quests[q.id].claimed);const claimable=active.filter(q=>profile.quests[q.id].count>=q.goal);$('npc-summary').textContent=claimable.length?`委托完成 · ${claimable.length} 份谢礼待领取`:active.length?`委托 ${active.length} · ${active.map(q=>profile.quests[q.id].count+'/'+q.goal).join(' ｜ ')}`:'新委托 · NPC 有事找你';$('npc-action').disabled=!!state&&(state.claimed||state.count<q.goal);$('quest-track').textContent=QUESTS.filter(q=>profile.quests?.[q.id]&&!profile.quests[q.id].claimed).map(q=>`${q.npc}：${q.title} ${profile.quests[q.id].count}/${q.goal}${profile.quests[q.id].count>=q.goal?' · 可领取':''}`).join(' ｜ ')||'营中委托：与场景下方的 NPC 对话即可接取';}
 $('npc-other').onclick=()=>{for(let n=1;n<=QUESTS.length;n++){const i=(questIndex+n)%QUESTS.length;if(questAvailable(profile,QUESTS[i])&&!profile.quests?.[QUESTS[i].id]?.claimed){questIndex=i;break;}}updateQuest();};
 $('npc-action').onclick=()=>{const q=QUESTS[questIndex];profile.quests??={};const state=profile.quests[q.id];if(!questAvailable(profile,q))return;if(!state){profile.quests[q.id]={count:0,claimed:false};$('receipt').textContent=`已接下${q.npc}的「${q.title}」，目标已加入追踪。`;}else if(state.count>=q.goal&&!state.claimed){state.claimed=true;const item=grantLoot(profile,'quest-'+q.id);showReward(item,q.npc+'的委托谢礼');const follow=QUESTS.findIndex(next=>next.requires===q.id);if(follow>=0)questIndex=follow;$('receipt').textContent=`${q.npc}的委托完成！获得称号「${q.reward}」。`;}saveProgress();updateQuest();};

@@ -6,17 +6,46 @@ const characterAssets=new Map();function characterAsset(name){if(!characterAsset
 
 const atlas=loadAsset('archer-cast-v2.webp'),backdrop=loadAsset('camp-autumn-v2.webp'),targetArt=loadAsset('target-straw-v2.webp');
 // Source rectangles preserve separate identities and never change NPC on a hit.
-const sprites=[[0,0,384,508],[384,0,392,508],[776,0,380,516],[1156,0,380,516],[0,512,384,512],[384,512,384,512],[768,512,384,512],[1152,512,384,512]];
+const sprites=[[0,0,384,508],[384,0,392,508],[776,0,380,516],[1156,0,380,516],[0,512,384,512],[384,512,384,512],[768,520,384,504],[1152,520,384,504]];
 export function line(g,x,y,a,b,c=INK,w=3){g.beginPath();g.moveTo(x,y);g.lineTo(a,b);g.strokeStyle=c;g.lineWidth=w;g.lineCap='round';g.stroke()}
 export function text(g,s,x,y,size=20,c=INK){g.fillStyle=c;g.font=`600 ${size}px system-ui`;g.fillText(s,x,y)}
 function oval(g,x,y,rx,ry,c){g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fillStyle=c;g.fill()}
-function sprite(g,n,x,y,h,tilt=0,character='male',released=false,tier=1){const staged=character==='female'&&n<4;const recruitAtlas=staged&&tier===0?characterAsset('recruit-female-v1.webp'):null,silverAtlas=staged&&tier===2?characterAsset('silver-female-v1.webp'):null,femaleAtlas=staged&&tier===1?characterAsset('general-female-v2.webp'):null,releaseAtlas=released&&!staged?characterAsset('archer-release-v1.webp'):null;const sheet=staged?(tier===2?silverAtlas:tier===1?femaleAtlas:recruitAtlas):released&&releaseAtlas?.complete&&releaseAtlas.naturalWidth?releaseAtlas:character==='female'&&n<4?femaleAtlas:atlas;if(!sheet?.complete||!sheet.naturalWidth)return;let rect=sprites[n];if(staged){const cell=(n>=2?3:0)+(released?2:n%2),w=sheet.naturalWidth/3,h=sheet.naturalHeight/2;rect=[cell%3*w,Math.floor(cell/3)*h,w,h];}if(!staged&&sheet===releaseAtlas){const halfW=sheet.naturalWidth/2,halfH=sheet.naturalHeight/2;const cell=sheet===releaseAtlas?(n>=2?2:0)+(character==='female'?1:0):n;rect=[cell%2*halfW,Math.floor(cell/2)*halfH,halfW,halfH];}if(n===0&&!released&&character==='female')rect[3]*=.97;if(staged&&tier===2&&n===2&&!released)rect[2]*=540/512;const [sx,sy,sw,sh]=rect,w=h*(sheet===releaseAtlas&&character!=='female'?(n>=2?380/516:392/508):sw/sh);g.save();g.translate(x,y);g.rotate(tilt);
+function sprite(g,n,x,y,h,tilt=0,character='male',released=false,tier=1){const staged=character==='female'&&n<4;const recruitAtlas=staged&&tier===0?characterAsset('recruit-female-v1.webp'):null,silverAtlas=staged&&tier===2?characterAsset('silver-female-v1.webp'):null,femaleAtlas=staged&&tier===1?characterAsset('general-female-v2.webp'):null,releaseAtlas=released&&!staged?characterAsset('archer-release-v1.webp'):null;const sheet=staged?(tier===2?silverAtlas:tier===1?femaleAtlas:recruitAtlas):released&&releaseAtlas?.complete&&releaseAtlas.naturalWidth?releaseAtlas:character==='female'&&n<4?femaleAtlas:atlas;if(!sheet?.complete||!sheet.naturalWidth)return;let rect=sprites[n];if(staged){const cell=(n>=2?3:0)+(released?2:n%2),w=sheet.naturalWidth/3,h=sheet.naturalHeight/2;rect=[cell%3*w,Math.floor(cell/3)*h,w,h];}if(!staged&&sheet===releaseAtlas){const halfW=sheet.naturalWidth/2,halfH=sheet.naturalHeight/2;const cell=sheet===releaseAtlas?(n>=2?2:0)+(character==='female'?1:0):n;rect=[cell%2*halfW,Math.floor(cell/2)*halfH,halfW,halfH];}if(staged&&tier===0&&n<2)rect[3]=490;
+if(!staged&&!released&&n===2)rect=[748,0,404,520];
+if(staged&&tier===0&&n>=2){const col=released?2:n%2;rect=[col*512,498,col===2?512:548,526];}
+if(staged&&tier===2&&n<2&&released)rect=[1004,0,532,512];
+if(staged&&tier===2&&n===2&&!released)rect[2]*=540/512;const [sx,sy,sw,sh]=rect,w=h*(sheet===releaseAtlas&&character!=='female'?(n>=2?380/516:392/508):sw/sh);g.save();g.translate(x,y);g.rotate(tilt);
 // The silver draw pose spills across its atlas cell: exclude the neighbouring
 // idle horse's muzzle (left) and release pose's tail (lower right).
 if(staged&&tier===2&&n>=2&&!released){
  const idle=n===2;
  const outline=idle?[[0,0],[512,0],[512,120],[540,120],[540,280],[512,290],[512,512],[0,512]]:[[0,0],[512,0],[512,280],[495,300],[495,512],[0,512],[0,290],[28,280],[28,120],[0,120]];
  g.beginPath();outline.forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px/(idle?540:512)*w,-h+py/512*h));g.closePath();g.clip();
+}
+// New recruit mounted heads and bow tips also cross the nominal grid.
+if(staged&&tier===0&&n>=2){
+ const col=released?2:n%2;
+ const points=col===0?[[0,0],[512,0],[512,120],[548,120],[548,292],[512,302],[512,526],[0,526]]:
+ col===1?[[0,0],[512,0],[512,135],[548,135],[548,292],[512,302],[512,526],[0,526],[0,302],[44,292],[44,120],[0,120]]:
+ [[0,0],[512,0],[512,526],[34,526],[34,440],[0,435],[0,305],[36,292],[36,135],[0,135]];
+ g.beginPath();points.forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px/sw*w,-h+py/sh*h));g.closePath();g.clip();
+}
+if(staged&&tier===2&&n<2){
+ const points=released?[[20,0],[532,0],[532,512],[0,512],[0,280],[20,270]]:n===0?[[0,0],[512,0],[512,330],[504,340],[504,512],[0,512]]:[[0,0],[512,0],[512,275],[492,290],[492,430],[512,440],[512,512],[0,512]];
+ g.beginPath();points.forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px/sw*w,-h+py/sh*h));g.closePath();g.clip();
+}
+if(!staged&&!released&&n<3){
+ const points=n===0?[[0,0],[384,0],[384,155],[334,155],[334,230],[384,230],[384,508],[0,508]]:
+ n===1?[[0,0],[392,0],[392,250],[360,250],[360,508],[0,508]]:
+ [[0,0],[404,0],[404,520],[0,520],[0,235],[32,230],[32,180],[0,175]];
+ g.beginPath();points.forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px/sw*w,-h+py/sh*h));g.closePath();g.clip();
+}
+if(staged&&tier===2&&n===1&&!released){
+ // Lower-row bow tip occupies the gap between this pose's boots.
+ g.beginPath();[[0,0],[512,0],[512,512],[390,512],[390,493],[330,493],[330,512],[0,512]].forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px/sw*w,-h+py/sh*h));g.closePath();g.clip();
+}
+if(!staged&&sheet===releaseAtlas&&n<2){
+ g.beginPath();[[0,0],[1,0],[1,1],[.78,1],[.78,.96],[.66,.96],[.66,1],[0,1]].forEach(([px,py],i)=>g[i?'lineTo':'moveTo'](-w/2+px*w,-h+py*h));g.closePath();g.clip();
 }
 g.drawImage(sheet,sx,sy,sw,sh,-w/2,-h,w,h);g.restore()}
 // A single trajectory supplies both arrow position and its tangent.
@@ -125,3 +154,5 @@ export function drawScene(g,f){
 
  g.restore();
 }
+
+export function paintCharacter(...args){return sprite(...args)}
