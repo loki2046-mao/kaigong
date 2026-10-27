@@ -1,3 +1,4 @@
+import {prepareReport,advanceReport,backReport} from './report-pages.mjs';
 import {awardHonors,restoreHonors} from './camp-honors.mjs';
 import {renderDecree,showFinale} from './ceremony-ui.mjs';
 import {GOODS,migratePay,missionPay,questPay,starPay,loadout,account} from './camp-economy.mjs';
@@ -93,9 +94,9 @@ ready();if(replay&&s.awaitingNext){$('aim').hidden=false;$('next').hidden=false;
 
 // First arrow teaches directly in the field; detailed help stays optional.
 
-function openResult(){$('record-review').textContent=trial?trialReview(trial):(replay?replay.records:profile.records)[s.mission]?.review||'';if($('chapter-result').hidden)$('memory-line').hidden=true;const dialog=$('result-dialog');$('result-next').hidden=$('next').hidden;$('result-next').textContent=$('next').textContent;$('result-heading').textContent=$('chapter-result').hidden?'此行所得':'制书 · 本回封赏';$('pay-receipt').hidden=!!trial;document.querySelector('.armory-link').hidden=!!trial;if(!$('pay-receipt').textContent)$('pay-receipt').textContent='军饷结余 '+account(profile).balance+'文';if(!dialog.open){band.update({state:'paused'});dialog.showModal();}}
-$('result-next').onclick=()=>$('next').click();
-$('result-close').onclick=$('result-stay').onclick=()=>$('result-dialog').close();$('report-open').onclick=()=>s.complete&&!replay?showFinale(profile):openResult();
+function openResult(){$('record-review').textContent=trial?trialReview(trial):(replay?replay.records:profile.records)[s.mission]?.review||'';if($('chapter-result').hidden)$('memory-line').hidden=true;const dialog=$('result-dialog');$('result-next').hidden=$('next').hidden;$('result-next').textContent=$('next').textContent;$('result-heading').textContent=$('chapter-result').hidden?'此行所得':'制书 · 本回封赏';$('pay-receipt').hidden=!!trial;document.querySelector('.armory-link').hidden=!!trial;if(!$('pay-receipt').textContent)$('pay-receipt').textContent='军饷结余 '+account(profile).balance+'文';prepareReport();if(!dialog.open){band.update({state:'paused'});dialog.showModal();}}
+$('result-next').onclick=()=>{if(!advanceReport())$('next').click();};
+$('result-close').onclick=()=>$('result-dialog').close();$('result-stay').onclick=()=>{if(!backReport())$('result-dialog').close();};$('report-open').onclick=()=>s.complete&&!replay?showFinale(profile):openResult();
 // Each supplementary panel uses the same native modal and returns to its original slot.
 let activeDetail=null,detailSlot=null;
 for(const id of ['npc-invite','mission-details','aim-help']){const detail=$(id);detail.addEventListener('toggle',()=>{if(!detail.open||activeDetail)return;cancel();detailSlot=document.createElement('div');detailSlot.setAttribute('aria-hidden','true');detailSlot.style.cssText='flex:none;height:'+Math.ceil(detail.querySelector('summary').getBoundingClientRect().height+2)+'px';detail.before(detailSlot);activeDetail=detail;$('detail-body').append(detail);band.update({state:'paused'});$('detail-dialog').showModal();});}

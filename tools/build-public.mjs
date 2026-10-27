@@ -17,4 +17,4 @@ console.log('Public files built in release/public');
 
 await appendFile(new URL('_headers',out),"/art/*\n  Cache-Control: public, max-age=86400\n/audio/*\n  Cache-Control: public, max-age=86400\n");
 
-await writeFile(new URL('version.json',out),JSON.stringify({version:'6.1.0',release:'imperial-honors-v6.1',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
+await writeFile(new URL('version.json',out),JSON.stringify({version:'6.2.0',release:'paged-game-ui-v6.2',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
