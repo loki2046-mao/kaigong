@@ -1,3 +1,4 @@
+import {RELIC_RECTS} from './atlas-art.mjs';
 import { targetState, riderOffset, femaleTierFor } from './engine.mjs?v=oct25-polish3';
 const INK='#654a35', RED='#bd6952', GOLD='#edc460';
 const assetRoot=typeof location!=='undefined'&&location.pathname.includes('/tools/')?'../':'./';
@@ -5,13 +6,14 @@ function loadAsset(name){if(typeof Image==='undefined')return null;const im=new 
 const characterAssets=new Map();function characterAsset(name){if(!characterAssets.has(name))characterAssets.set(name,loadAsset(name));return characterAssets.get(name)}
 
 const backgrounds=new Map();function fieldAsset(theme){if(!theme||theme==='autumn')return backdrop;const name='camp-'+theme+'-v4.webp';if(!backgrounds.has(name))backgrounds.set(name,loadAsset(name));return backgrounds.get(name);}
+const npcAtlas=loadAsset('npc-actions-v5.webp'),relicArt=loadAsset('relics-v1.webp');
 const atlas=loadAsset('archer-cast-v2.webp'),backdrop=loadAsset('camp-autumn-v2.webp'),targetArt=loadAsset('target-straw-v2.webp');
 // Source rectangles preserve separate identities and never change NPC on a hit.
 const sprites=[[0,0,384,508],[384,0,392,508],[776,0,380,516],[1156,0,380,516],[0,512,384,512],[384,512,384,512],[768,520,384,504],[1152,520,384,504]];
 export function line(g,x,y,a,b,c=INK,w=3){g.beginPath();g.moveTo(x,y);g.lineTo(a,b);g.strokeStyle=c;g.lineWidth=w;g.lineCap='round';g.stroke()}
 export function text(g,s,x,y,size=20,c=INK){g.fillStyle=c;g.font=`400 ${size}px KaigongDisplay, serif`;g.fillText(s,x,y)}
 function oval(g,x,y,rx,ry,c){g.beginPath();g.ellipse(x,y,rx,ry,0,0,Math.PI*2);g.fillStyle=c;g.fill()}
-function sprite(g,n,x,y,h,tilt=0,character='male',released=false,tier=1){const staged=character==='female'&&n<4;const recruitAtlas=staged&&tier===0?characterAsset('recruit-female-v1.webp'):null,silverAtlas=staged&&tier===2?characterAsset('silver-female-v1.webp'):null,femaleAtlas=staged&&tier===1?characterAsset('general-female-v2.webp'):null,releaseAtlas=released&&!staged?characterAsset('archer-release-v1.webp'):null;const sheet=staged?(tier===2?silverAtlas:tier===1?femaleAtlas:recruitAtlas):released&&releaseAtlas?.complete&&releaseAtlas.naturalWidth?releaseAtlas:character==='female'&&n<4?femaleAtlas:atlas;if(!sheet?.complete||!sheet.naturalWidth)return;let rect=sprites[n];if(staged){const cell=(n>=2?3:0)+(released?2:n%2),w=sheet.naturalWidth/3,h=sheet.naturalHeight/2;rect=[cell%3*w,Math.floor(cell/3)*h,w,h];}if(!staged&&sheet===releaseAtlas){const halfW=sheet.naturalWidth/2,halfH=sheet.naturalHeight/2;const cell=sheet===releaseAtlas?(n>=2?2:0)+(character==='female'?1:0):n;rect=[cell%2*halfW,Math.floor(cell/2)*halfH,halfW,halfH];}if(staged&&tier===0&&n<2)rect[3]=490;
+function sprite(g,n,x,y,h,tilt=0,character='male',released=false,tier=1){if(character==='male'&&n<4){const ids=['recruit','general','silver','ranger','winter'],im=characterAsset(ids[tier]+'-male-v5.webp');if(!im?.complete||!im.naturalWidth)return;const cell=(n>=2?3:0)+(released?2:n%2),cw=im.naturalWidth/3,ch=im.naturalHeight/2;g.save();g.translate(x,y);g.rotate(tilt);const top=n<2,sy=top?0:(tier>=3?470:480)*ch/512,sh=top?(tier>=3?470:480)*ch/512:im.naturalHeight-sy,sw=cw-16;g.drawImage(im,(cell%3)*cw+8,sy,sw,sh,-h*sw/sh/2,-h,h*sw/sh,h);g.restore();return;}const staged=character==='female'&&n<4;const recruitAtlas=staged&&tier===0?characterAsset('recruit-female-v1.webp'):null,silverAtlas=staged&&tier===2?characterAsset('silver-female-v1.webp'):null,femaleAtlas=staged&&tier===1?characterAsset('general-female-v2.webp'):null,releaseAtlas=released&&!staged?characterAsset('archer-release-v1.webp'):null;const sheet=staged?(tier===3?characterAsset('ranger-female-v5.webp'):tier===4?characterAsset('winter-female-v5.webp'):tier===2?silverAtlas:tier===1?femaleAtlas:recruitAtlas):released&&releaseAtlas?.complete&&releaseAtlas.naturalWidth?releaseAtlas:character==='female'&&n<4?femaleAtlas:atlas;if(!sheet?.complete||!sheet.naturalWidth)return;let rect=sprites[n];if(staged){const cell=(n>=2?3:0)+(released?2:n%2),w=sheet.naturalWidth/3,h=sheet.naturalHeight/2;rect=[cell%3*w,Math.floor(cell/3)*h,w,h];}if(!staged&&sheet===releaseAtlas){const halfW=sheet.naturalWidth/2,halfH=sheet.naturalHeight/2;const cell=sheet===releaseAtlas?(n>=2?2:0)+(character==='female'?1:0):n;rect=[cell%2*halfW,Math.floor(cell/2)*halfH,halfW,halfH];}if(staged&&tier===0&&n<2)rect[3]=490;if(staged&&tier>=3){const cell=(n>=2?3:0)+(released?2:n%2);rect=[cell%3*512+6,n>=2?500:0,500,n>=2?524:490];}
 if(!staged&&!released&&n===2)rect=[748,0,404,520];
 if(staged&&tier===0&&n>=2){const col=released?2:n%2;rect=[col*512,498,col===2?512:548,526];}
 if(staged&&tier===2&&n<2&&released)rect=[1004,0,532,512];
@@ -117,7 +119,7 @@ export function drawScene(g,f){
  crowd.forEach(([x,y,h],i)=>{
    const hop=reduced?0:cheer?Math.abs(Math.sin(Math.max(0,impactAge)*10+i))*(outcome==='perfect'?12:5):Math.sin(t*1.4+i)*1.2;
    const tilt=reduced?0:miss?Math.sin(t*5+i)*.035:cheer?Math.sin(t*7+i)*.025:Math.sin(t*1.2+i)*.008;
-   oval(g,x,y+2,h*.26,5,'#65412733');sprite(g,4+i,x,y-hop,h,tilt);
+   oval(g,x,y+2,h*.26,5,'#65412733');if(npcAtlas?.complete&&npcAtlas.naturalWidth){const cell=npcAtlas.naturalWidth/4,pose=cheer?3:f.holding?2:!reduced&&Math.floor(t/4+i)%4===0?1:0;const [ry,rh]=[[0,300],[300,320],[620,305],[925,329]][i],w=h*cell/rh;g.drawImage(npcAtlas,pose*cell,ry,cell,rh,x-w/2,y-hop-h,w,h);}else sprite(g,4+i,x,y-hop,h,tilt);
    if(cheer&&impactAge<.65&&!reduced){text(g,i===2?'♪':'✦',x+32,y-h-6-hop,22,'#fff3bb');}
  });
 
@@ -142,8 +144,9 @@ export function drawScene(g,f){
  if(ride)for(let i=0;i<3;i++){const k=(t*1.5+i/3)%1;g.globalAlpha=(1-k)*.25;oval(g,x-58-k*45,base-2-k*8,5+k*8,3+k*3,'#c3b795')}g.globalAlpha=1;
  g.save();g.fillStyle='#f8e9cbdd';g.beginPath();g.roundRect(tx-36,base+16,72,27,6);g.fill();text(g,`${b?.distance||20} 步`,tx-23,base+35,17,'#664a2d');g.restore();
  if(!home&&!outcome&&power>1){g.setLineDash([3,9]);g.globalAlpha=.35;line(g,tx-58,mapY(target.shotY),tx+25,mapY(target.shotY),'#897e65',2);g.setLineDash([]);g.globalAlpha=1}
- if(!home&&!outcome&&f.holding&&power>1){const ly=mapY(target.shotY),aligned=Math.abs(target.shotY-target.y)<=b.radius;g.save();g.strokeStyle=aligned?'#ffe4a2':'#f7eee0';g.globalAlpha=.8;g.lineWidth=2;g.beginPath();g.arc(tx,Math.max(230,Math.min(560,ly)),7,0,Math.PI*2);g.stroke();g.restore();}
+ if(!home&&!outcome&&f.holding&&power>1&&f.practiceGuide){const ly=mapY(target.shotY),aligned=Math.abs(target.shotY-target.y)<=b.radius;g.save();g.strokeStyle=aligned?'#ffe4a2':'#f7eee0';g.globalAlpha=.8;g.lineWidth=2;g.beginPath();g.arc(tx,Math.max(230,Math.min(560,ly)),7,0,Math.PI*2);g.stroke();g.restore();}
  if(arrived&&!cheer&&f.shot&&impactAge<.8){g.save();g.strokeStyle='#f0be8a';g.globalAlpha=Math.max(0,1-impactAge/.8);const my=mapY(f.shot.shotY);line(g,tx-7,my-7,tx+7,my+7,'#f0be8a',2);line(g,tx+7,my-7,tx-7,my+7,'#f0be8a',2);g.restore();}
+ if(f.decoration&&relicArt?.complete&&relicArt.naturalWidth){const parts=f.decoration.split('-'),index=Number(parts[1])*8+Number(parts[2]),rect=RELIC_RECTS[index];if(rect){g.save();g.fillStyle='#504331';g.fillRect(450,base+98,70,9);g.fillRect(456,base+104,5,28);g.fillRect(510,base+104,5,28);const [rx,ry,rw,rh]=rect;g.drawImage(relicArt,rx,ry,rw,rh,456,base+44,58,54);g.restore();}}
  if(f.campMemories>=1){g.save();g.globalAlpha=.85;line(g,17,base+38,17,base+94,'#71563c',3);g.fillStyle='#a34e3d';g.beginPath();g.moveTo(17,base+38);g.lineTo(55,base+42);g.lineTo(43,base+53);g.lineTo(17,base+55);g.fill();g.restore();}
  if(outcome&&f.shot){
    const from={x:x+(f.character==='female'?108:ride?90:92),y:y-h*(f.character==='female'?(ride?.80:.67):(ride?.72:.58))};

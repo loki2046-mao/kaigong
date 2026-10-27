@@ -15,8 +15,8 @@ const RELIC_MASKS={
 46:'1180,850 1220,850 1220,835 1303,835 1303,1013 1180,1013'
 };
 let iconSerial=0;
-export function atlasIcon(element,file,rect,label=''){
+export function atlasIcon(element,file,rect,label='',size=[1536,1024]){
  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),image=document.createElementNS(ns,'image');
  svg.setAttribute('viewBox',rect.join(' '));svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.setAttribute('role','img');svg.setAttribute('aria-label',label);svg.style.cssText='display:block;width:100%;height:100%;overflow:hidden';
- const clip=document.createElementNS(ns,'clipPath'),box=document.createElementNS(ns,'rect'),id='atlas-crop-'+(++iconSerial);clip.setAttribute('id',id);['x','y','width','height'].forEach((k,i)=>box.setAttribute(k,rect[i]));const mask=RELIC_MASKS[RELIC_RECTS.indexOf(rect)];if(mask){const polygon=document.createElementNS(ns,'polygon');polygon.setAttribute('points',mask);clip.append(polygon);}else clip.append(box);svg.append(clip);image.setAttribute('clip-path',`url(#${id})`);image.setAttribute('href',file);image.setAttribute('width','1536');image.setAttribute('height','1024');svg.append(image);element.replaceChildren(svg);element.style.background='none';
+ const clip=document.createElementNS(ns,'clipPath'),box=document.createElementNS(ns,'rect'),id='atlas-crop-'+(++iconSerial);clip.setAttribute('id',id);['x','y','width','height'].forEach((k,i)=>box.setAttribute(k,rect[i]));const mask=RELIC_MASKS[RELIC_RECTS.indexOf(rect)];if(mask){const polygon=document.createElementNS(ns,'polygon');polygon.setAttribute('points',mask);clip.append(polygon);}else clip.append(box);svg.append(clip);image.setAttribute('clip-path',`url(#${id})`);image.setAttribute('href',file);image.setAttribute('width',String(size[0]));image.setAttribute('height',String(size[1]));svg.append(image);element.replaceChildren(svg);element.style.background='none';
 }
