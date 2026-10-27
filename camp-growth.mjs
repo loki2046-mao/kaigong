@@ -1,7 +1,7 @@
 import {TRINKETS} from './camp-loot.mjs';
 export const RANKS=['初试弓弦','校场新锐','百步好手','破阵先锋','飞鸿名将','弓道宗师'];
 export const THRESHOLDS=[0,120,360,750,1300,2100];
-export const SET_TITLES=['伙房知己','校场拾光人','营门守望者','马背旧友','山河收藏家','归营故人'];
+export const SET_TITLES=['伙房知己','校场拾光人','营门守望者','马背旧友','山河收藏家','归营故人','边关有归人'];
 export const SECRETS=[
 {id:'comeback',name:'失之东隅',hint:'失手之后，仍有漂亮的下一箭。',gift:'relic-1-5'},
 {id:'triple',name:'三箭惊营',hint:'让靶心接连响起三次。',gift:'relic-2-0'},
