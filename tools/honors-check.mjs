@@ -1,0 +1,8 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {HONORS,awardHonors,restoreHonors,decree,completion} from '../camp-honors.mjs';
+const rows=(n=60)=>Object.fromEntries(Array.from({length:n},(_,i)=>[i,{finished:1,shots:10,hits:7,perfect:1,version:4}]));
+test('十二回按已完成成绩补封，重复查看不重复授阶',()=>{const p={name:'弓手',records:rows(5)};restoreHonors(p);assert.deepEqual(Object.keys(p.honors),['0']);const at=p.honors[0].at;assert.equal(awardHonors(p,0),null);assert.equal(p.honors[0].at,at);assert.equal(decree(p,11).rank,'云麾将军');assert.ok(decree(p,0).body.startsWith('门下：'));assert.equal(HONORS.length,12);});
+test('通关不等于全星全藏，缺失清单据真实存档计算',()=>{const p={records:rows(),loot:{'relic-0-0':1},quests:{cook:{claimed:true}}};const d=completion(p);assert.equal(d.complete,true);assert.ok(d.stars<36);assert.equal(d.collected,1);assert.equal(d.missing.length,55);assert.equal(d.quests.length,6);assert.equal(d.secrets.length,4);assert.ok(!d.missing.some(t=>t.id==='relic-0-0'));});
+test('重挑战最佳星级计入结算，旧周目成绩和制书保留',()=>{const p={records:{},runs:[{records:rows()}],bestChapters:{0:{stars:3,accuracy:100,checks:[true,true,true]}}};restoreHonors(p);assert.equal(Object.keys(p.honors).length,12);const d=completion(p);assert.equal(d.chapters[0].stars,3);assert.equal(d.complete,true);});
+test('新档案不误报通关或已获赏赐',()=>{const p={records:{}};restoreHonors(p);assert.equal(p.honors,undefined);assert.equal(completion(p).complete,false);assert.equal(completion(p).stars,0);});
+
+test('制书不固定角色名，未题名留横线，自定义姓名自动带入',()=>{assert.ok(decree({name:'无名弓手'},0).body.includes('——'));assert.ok(decree({name:'赛博小熊猫'},0).body.includes('赛博小熊猫'));assert.ok(!decree({},0).body.includes('禾宴'));});

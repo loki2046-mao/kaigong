@@ -6,7 +6,7 @@ QUESTS.push(
  {id:'coach2',requires:'coach',npc:'教头沈砺',title:'穿旗定心',story:'马步稳了，再穿过三次开合旗靶，练一练眼力与耐心。',kind:'flag',goal:3,reward:'穿旗定心'});
 export function questAvailable(p,q){return !q.requires||!!p.quests?.[q.requires]?.claimed;}
 export function chapterStars(profile,index){return Math.max(profile.bestChapters?.[index]?.stars||0,chapterScore(profile.records,index)?.stars||0);}
-export function titlesFor(p){return ['初入军营',...QUESTS.filter(q=>p.quests?.[q.id]?.claimed).map(q=>q.reward),...(Array.from({length:12},(_,i)=>chapterStars(p,i)).some(n=>n===3)?['三星彩弓']:[]),...(p.progress?.complete?['封帅归来']:[])];}
+export function titlesFor(p){return ['初入军营',...Object.values(p.honors||{}).map(h=>h.rank),...QUESTS.filter(q=>p.quests?.[q.id]?.claimed).map(q=>q.reward),...(Array.from({length:12},(_,i)=>chapterStars(p,i)).some(n=>n===3)?['三星彩弓']:[]),...(p.progress?.complete?['封帅归来']:[])];}
 export function questHit(p,result,kind,mounted){if(!result.hit)return;for(const q of QUESTS){const state=p.quests?.[q.id];if(state&&!state.claimed&&(q.kind===kind||q.kind==='perfect'&&result.kind==='perfect'||q.kind==='mounted'&&mounted))state.count=Math.min(q.goal,(state.count||0)+1);}}
 
 const gifts={cook:'relic-1-2',guard:'relic-3-7',coach:'relic-3-0',cook2:'relic-0-1',guard2:'relic-2-2',coach2:'relic-5-2'};QUESTS.forEach(q=>q.gift=gifts[q.id]);
