@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>机关训练场 · 开弓</title><link rel="preload" href="fonts/kaigong-display.woff2?v=experience4" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="camp.css"><link rel="stylesheet" href="ui-system.css"><link rel="stylesheet" href="field.css?v=training3"></head>
+<body class="field-training"><main>
+<header><a href="camp.html"><span class="brand-seal">弓</span> 开弓</a><span class="field-label">机关训练场</span><button id="book-open">训练手册</button><button id="sound">开启声音</button><a href="camp.html">回主线</a></header>
+<section class="arena"><div class="field-heading"><span id="progress">第一试 / 六试</span><h1 id="title">断索开路</h1><p id="rule"></p></div><canvas id="scene" width="1000" height="720" aria-label="机关训练场场景"></canvas><div id="field-cue" role="status"></div></section>
+<section class="panel"><div class="field-status"><span id="objective"></span><span id="attempts">尚未出箭</span></div><div id="routes" hidden><button id="safe" aria-pressed="true">稳妥双靶</button><button id="risk" aria-pressed="false">小坛连锁</button></div>
+<div id="aim"><div class="aim-readout"><strong id="aim-cue">按住拉弓</strong><b id="power">0%</b></div><div id="meter" role="progressbar" aria-label="弓力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="power-fill"></i><i id="zone"></i><i id="gold"></i><b id="needle"></b></div><div class="meter-scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><button id="draw" class="primary">按住拉弓</button></div>
+<div class="field-bottom"><button id="cancel">收弓</button><p id="feedback" role="status">青区慢拉 · 金芯神射</p><button id="tap">轻点操作</button></div><div id="done-actions" hidden><button id="retry">再练一次</button><button id="next" class="primary">下一项训练 →</button></div></section>
+<footer>赛博小熊猫 Loki · <span id="save-state">进度自动保存</span></footer></main>
+<dialog id="book"><div class="book-heading"><div><small>教头带练 · 六项本领</small><h2>训练手册</h2></div><button id="book-close" aria-label="关闭训练手册">×</button></div><p id="book-intro">不比赛、不扣军饷。选一项练习，随时回主线。</p><div id="book-grid"></div><p id="letter-note"></p><a href="camp.html">回到主线 →</a></dialog>
+<dialog id="field-pause"><h2>弓已收好</h2><p>机关也停在原处，继续即可。</p><button id="resume" class="primary">继续演武</button></dialog>
+<script type="module" src="field.mjs?v=training3"></script></body></html>

@@ -1,6 +1,6 @@
 import{mkdir,copyFile,writeFile,readdir,readFile,appendFile,rm}from'node:fs/promises';
 const out=new URL('../release/public/',import.meta.url),root=new URL('../',import.meta.url);await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
-for(const name of await readdir(root))if(name.endsWith('.mjs')||['ui-system.css','camp.html','camp.css','archive.html','archive.css','trial.html','trial.css','insights.html'].includes(name))await copyFile(new URL(name,root),new URL(name,out));
+for(const name of await readdir(root))if(name.endsWith('.mjs')||['field.html','field.css','ui-system.css','decree-fonts.css','decree-silk.css','camp.html','camp.css','archive.html','archive.css','trial.html','trial.css','insights.html'].includes(name))await copyFile(new URL(name,root),new URL(name,out));
 await mkdir(new URL('art/',out),{recursive:true});for(const name of await readdir(new URL('art/',root)))if(name.endsWith('.webp'))await copyFile(new URL('art/'+name,root),new URL('art/'+name,out));
 await mkdir(new URL('fonts/',out),{recursive:true});for(const name of await readdir(new URL('fonts/',root)))await copyFile(new URL('fonts/'+name,root),new URL('fonts/'+name,out));
 await mkdir(new URL('audio/',out),{recursive:true});for(const name of ['horse-path-loop.mp3','pot-break.mp3','SOURCES.md'])await copyFile(new URL('audio/'+name,root),new URL('audio/'+name,out));
@@ -13,19 +13,6 @@ await writeFile(new URL('index.html',out),homepage);
 await appendFile(new URL('_headers',out),"/*\n  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'\n  X-Frame-Options: SAMEORIGIN\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n");
 await copyFile(new URL('stats-service/pages-worker.mjs',root),new URL('_worker.js',out));
 await writeFile(new URL('_routes.json',out),JSON.stringify({version:1,include:['/api/visits/*'],exclude:[]}));
-
-await writeFile(new URL('robots.txt',out),'User-agent: *\nAllow: /\n\nSitemap: https://kaigong-loki.pages.dev/sitemap.xml\n');
-await writeFile(new URL('sitemap.xml',out),`<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://kaigong-loki.pages.dev/</loc></url>
-  <url><loc>https://kaigong-loki.pages.dev/camp.html</loc></url>
-  <url><loc>https://kaigong-loki.pages.dev/trial.html</loc></url>
-  <url><loc>https://kaigong-loki.pages.dev/archive.html</loc></url>
-  <url><loc>https://loki-os.hiloki.ai/projects/kaigong.html</loc></url>
-  <url><loc>https://hiloki.ai/projects/kaigong.html</loc></url>
-</urlset>
-`);
-
 console.log('Public files built in release/public');
 
 await appendFile(new URL('_headers',out),"/art/*\n  Cache-Control: public, max-age=86400\n/audio/*\n  Cache-Control: public, max-age=86400\n");

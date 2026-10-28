@@ -26,7 +26,7 @@ export function riderOffset(bow,t){return bow?.mounted?Math.sin(t*4.2+bow.phase)
 export function targetState(bow,draw,timeOffset=0){
  if(!bow)return {x:848,y:442,shotY:442};
  const t=(draw?.elapsed||0)+timeOffset,amp=bow.targetAmplitude??(bow.moving?38:bow.type==='willow'?12:0);
- return {x:500+(Math.min(135,bow.distance)-20)*3.2,y:(bow.targetY??442)+Math.sin(t*bow.speed+bow.phase)*amp,shotY:landingY(bow,draw?.power||0,draw?.elapsed||0)};
+ return {x:500+(Math.min(135,bow.distance)-20)*3.2+Math.sin(t*(bow.horizontalSpeed||0)+bow.phase)*(bow.horizontalAmplitude||0),y:(bow.targetY??442)+Math.sin(t*bow.speed+bow.phase)*amp,shotY:landingY(bow,draw?.power||0,draw?.elapsed||0)};
 }
 export function landingY(bow,power,t){
  // Fixed elevation: stronger bows lift the arrow; distance adds drop. Horse gait changes launch height.
