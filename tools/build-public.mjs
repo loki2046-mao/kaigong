@@ -13,6 +13,19 @@ await writeFile(new URL('index.html',out),homepage);
 await appendFile(new URL('_headers',out),"/*\n  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'\n  X-Frame-Options: SAMEORIGIN\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n");
 await copyFile(new URL('stats-service/pages-worker.mjs',root),new URL('_worker.js',out));
 await writeFile(new URL('_routes.json',out),JSON.stringify({version:1,include:['/api/visits/*'],exclude:[]}));
+
+await writeFile(new URL('robots.txt',out),'User-agent: *\nAllow: /\n\nSitemap: https://kaigong-loki.pages.dev/sitemap.xml\n');
+await writeFile(new URL('sitemap.xml',out),`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kaigong-loki.pages.dev/</loc></url>
+  <url><loc>https://kaigong-loki.pages.dev/camp.html</loc></url>
+  <url><loc>https://kaigong-loki.pages.dev/trial.html</loc></url>
+  <url><loc>https://kaigong-loki.pages.dev/archive.html</loc></url>
+  <url><loc>https://loki-os.hiloki.ai/projects/kaigong.html</loc></url>
+  <url><loc>https://hiloki.ai/projects/kaigong.html</loc></url>
+</urlset>
+`);
+
 console.log('Public files built in release/public');
 
 await appendFile(new URL('_headers',out),"/art/*\n  Cache-Control: public, max-age=86400\n/audio/*\n  Cache-Control: public, max-age=86400\n");

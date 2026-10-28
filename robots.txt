@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kaigong-loki.pages.dev/sitemap.xml
