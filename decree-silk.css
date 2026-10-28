@@ -1,5 +1,30 @@
 /* Text is real, selectable, locally typeset; artwork contains no lettering. */
 .imperial-decree{--display-font:DecreeScript,DecreeRare;position:relative}
+.decree-save{position:absolute;right:12px;bottom:6px;z-index:4;min-height:36px;padding:6px 12px;border:1px solid #b99b66;background:#263039;color:#f3dfb7;font:16px DecreeScript,serif;cursor:pointer}
+.decree-save:disabled{opacity:.7;cursor:wait}
+@media(max-height:650px){.finale-paged .finale-metrics{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}.finale-paged .finale-metrics>div{padding:7px 2px!important}.finale-paged .finale-metrics strong{font-size:20px!important}.finale-paged .finale-metrics span{font-size:9px!important;white-space:nowrap}}
+@media(max-height:650px){.finale-paged .finale-hero{padding:10px!important}.finale-paged .finale-hero h2{margin:5px 0!important;font-size:27px!important}.finale-paged .finale-rank{margin:5px 0!important}.finale-paged .finale-lead{margin:8px 0!important}}
+.finale-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.finale-shortcuts a{flex:1;min-width:90px;padding:8px;color:#f5d294;border:1px solid #bd955466;text-align:center;text-decoration:none;font-size:14px;background:#683a2e55}
+@media(max-width:400px){.finale-shortcuts{margin-top:6px;gap:4px}.finale-shortcuts a{min-width:0;font-size:10px;padding:5px 2px}}
+.finale-relic-row{display:flex;align-items:center;gap:14px;min-height:48px}
+.finale-relic-icon{display:inline-block;width:48px;height:48px;flex:0 0 48px;background:#d4b87a22;border-radius:6px}
+.finale-relic-icon svg{display:block;width:100%;height:100%}
+.finale-pagination{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;gap:8px!important}
+.finale-pagination select{min-width:0;width:100%;height:38px;background:#262a30;color:#f2d5a0;border:1px solid #a88a57;font:13px var(--display-font);padding:4px}
+.finale-pagination>span{display:none}
+.finale-pagination button{white-space:nowrap}
+@media(max-width:400px){.finale-pagination{padding:8px!important;gap:4px!important}.finale-pagination button{font-size:12px!important;padding:6px!important}.finale-pagination select{font-size:11px}}
+.finale-dialog.finale-paged{border:1px solid #d7ad62;background:radial-gradient(ellipse at top,#653728 0, #28252a 48%,#171e25 100%);box-shadow:0 0 0 5px #a7823d22,0 25px 100px #000b}
+.finale-paged .finale-hero{background:linear-gradient(0deg,#231b22f5,#351d2440),url('art/camp-ceremony-v4.webp') center 45%/cover;border-bottom:1px solid #d6aa5e;padding:30px 20px}
+.finale-paged .finale-hero h2{color:#ffe4a3;text-shadow:0 2px 5px #361710,0 0 24px #d28e4455;letter-spacing:4px}
+.finale-paged .finale-eyebrow{color:#f0c377;letter-spacing:9px}
+.finale-paged .finale-metrics>div{border:1px solid #bd95543d;background:#221a1d66;padding:12px 6px}
+.finale-paged .finale-metrics strong{color:#f5cb7e}
+.finale-paged .finale-todo h3{color:#f2cd87;border-left:3px solid #bf654c;padding-left:12px}
+.finale-paged .finale-pagination{background:#211b21bb}
+.finale-paged .finale-pagination button{background:#783b30;border-color:#bf9659;color:#fff0cf}
+@media(max-width:600px){.finale-paged .finale-hero{padding:18px 12px}.finale-paged .finale-metrics>div{padding:8px 4px}}
 .decree-loading{visibility:hidden}.decree-loading-label{position:absolute;inset:45% 0 auto;text-align:center;color:#62492d}
 :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-sheet{
  background:url('art/decree-silk-v4.webp') center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none;
@@ -175,3 +200,23 @@
 @media(max-width:340px){
   :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-sheet{grid-template-columns:22px 38px minmax(0,1fr) 22px}
 }
+
+/* The victory ledger uses six destinations, not a forty-entry page menu. */
+.finale-page-picker{min-width:0;text-align:center}
+.finale-pagination .finale-page-count{display:block!important;font-size:10px;line-height:1.4;color:#c9b891;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.finale-page-picker select{height:30px!important;font:15px var(--display-font);border-color:#aa9058;background:#222d34;color:#f3dcb0}
+.finale-item-caption{display:block;min-width:0}
+.finale-item-caption small{display:block;color:#bdb7a7;font:12px/1.6 system-ui;margin-top:5px}
+.finale-paged .finale-collection .finale-item-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.finale-paged .finale-collection .finale-relic-row{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:16px 8px;text-align:center;background:linear-gradient(140deg,#bb955522,#38282144);border:1px solid #bd955455;border-radius:3px;min-height:144px;font:16px/1.5 var(--display-font)}
+.finale-paged .finale-collection .finale-relic-icon{width:74px;height:74px;flex:0 0 74px;display:block}
+@media(max-width:699px){.finale-paged .finale-collection .finale-item-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.finale-paged .finale-collection .finale-relic-row{min-height:108px;padding:8px 4px;gap:5px;font-size:14px}.finale-paged .finale-collection .finale-relic-icon{width:54px;height:54px;flex-basis:54px}.finale-page-picker select{font-size:13px}.finale-page-count{font-size:9px!important}}
+@media(max-height:650px){.finale-paged .finale-collection .finale-relic-row{min-height:95px;padding:5px 3px;font-size:12px}.finale-paged .finale-collection .finale-relic-icon{width:44px;height:44px;flex-basis:44px}}
+@media(prefers-reduced-motion:reduce){.finale-ribbons i{animation:none}}
+
+.finale-item-list>p{font-size:14px;line-height:1.7;padding:8px 0;margin:0;border-bottom:1px solid #bca57d33}
+
+.finale-hero h2{text-wrap:balance}.finale-paged .finale-collection .finale-item-caption{overflow-wrap:anywhere}
+@media(max-width:350px){.finale-paged .finale-hero h2{font-size:24px!important;letter-spacing:1px}}
+
+.finale-sound{position:absolute;top:6px;left:12px;z-index:3;min-height:36px;padding:5px 10px;background:#17232bdb;color:#eadbb9;border:1px solid #9b875e;font:12px var(--display-font)}

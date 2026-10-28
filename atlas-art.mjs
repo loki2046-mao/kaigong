@@ -17,6 +17,16 @@ const RELIC_MASKS={
 let iconSerial=0;
 export function atlasIcon(element,file,rect,label='',size=[1536,1024]){
  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),image=document.createElementNS(ns,'image');
+ // Resolve from this module, including clean URLs and nested entry points.
+ file=new URL(file,import.meta.url).href;
  svg.setAttribute('viewBox',rect.join(' '));svg.setAttribute('preserveAspectRatio','xMidYMid meet');svg.setAttribute('role','img');svg.setAttribute('aria-label',label);svg.style.cssText='display:block;width:100%;height:100%;overflow:hidden';
  const mask=RELIC_MASKS[RELIC_RECTS.indexOf(rect)];if(mask){const defs=document.createElementNS(ns,'defs'),clip=document.createElementNS(ns,'clipPath'),polygon=document.createElementNS(ns,'polygon'),id='atlas-crop-'+(++iconSerial);clip.setAttribute('id',id);clip.setAttribute('clipPathUnits','userSpaceOnUse');polygon.setAttribute('points',mask);clip.append(polygon);defs.append(clip);svg.append(defs);image.setAttribute('clip-path',`url(#${id})`);}image.setAttribute('href',file);image.setAttributeNS('http://www.w3.org/1999/xlink','href',file);image.setAttribute('width',String(size[0]));image.setAttribute('height',String(size[1]));svg.append(image);element.replaceChildren(svg);element.style.background='none';
+ // Clip the source rectangle as well as the SVG viewport. With 'meet',
+ // square slots otherwise reveal neighbouring sprites in the letterbox gutters.
+ const cropId='atlas-bounds-'+(++iconSerial),bounds=document.createElementNS(ns,'clipPath'),box=document.createElementNS(ns,'rect'),defs=document.createElementNS(ns,'defs'),group=document.createElementNS(ns,'g');
+ bounds.setAttribute('id',cropId);bounds.setAttribute('clipPathUnits','userSpaceOnUse');['x','y','width','height'].forEach((key,i)=>box.setAttribute(key,rect[i]));bounds.append(box);defs.append(bounds);svg.append(defs);group.setAttribute('clip-path',`url(#${cropId})`);group.append(image);svg.append(group);
+ // A failed image used to leave a permanently empty reward slot.
+ const status=document.createElement('button');status.type='button';status.textContent='载入藏品…';status.disabled=true;status.style.cssText='font:inherit;font-size:12px;line-height:1.4;padding:4px;max-width:100%;color:inherit;background:transparent;border:0';element.append(status);svg.style.display='none';
+ let attempt=0;
+ const load=()=>{const probe=new Image();status.disabled=true;status.textContent='载入藏品…';const timer=setTimeout(()=>probe.onerror(),12000);probe.onload=()=>{clearTimeout(timer);if(!svg.isConnected)return;image.setAttribute('href',probe.src);image.setAttributeNS('http://www.w3.org/1999/xlink','href',probe.src);svg.style.display='block';status.remove();};probe.onerror=()=>{clearTimeout(timer);if(!svg.isConnected)return;status.textContent='图片未载入 · 点击重试';status.disabled=false;};probe.src=attempt++?file+(file.includes('?')?'&':'?')+'retry='+Date.now():file;};status.onclick=load;load();
 }
