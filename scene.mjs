@@ -1,4 +1,4 @@
-import {RELIC_RECTS} from './atlas-art.mjs';
+import {RELIC_RECTS} from './atlas-art.mjs?v=frames32';
 import { targetState, riderOffset, femaleTierFor } from './engine.mjs?v=oct25-polish3';
 const INK='#654a35', RED='#bd6952', GOLD='#edc460';
 const assetRoot=typeof location!=='undefined'&&location.pathname.includes('/tools/')?'../':'./';

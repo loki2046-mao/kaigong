@@ -1,4 +1,4 @@
-import {atlasIcon} from './atlas-art.mjs';
+import {atlasIcon} from './atlas-art.mjs?v=frames32';
 import {TRINKETS} from './camp-loot.mjs';
 export const COMPANIONS=[{id:'cook',name:'老周',role:'伙头兵',line:'别空着肚子拉弓。想找哪一类小物，我替你留意。',rect:[0,512,384,512]},{id:'coach',name:'沈砺',role:'骑射教头',line:'先看上一箭。准头不是急出来的。',rect:[384,512,384,512]},{id:'scout',name:'阿雀',role:'斥候',line:'我盯着机关，你把弓拿稳。',rect:[768,520,384,504]},{id:'scribe',name:'温简',role:'随军书吏',line:'物件的来路，比价钱更值得记。',rect:[1152,520,384,504]}];
 export function installCompanions({profile,save,state,mission,competitive,openQuest}){const host=document.createElement('nav');host.id='companions';host.setAttribute('aria-label','营中同伴');document.querySelector('.arena').append(host);const dialog=document.createElement('dialog');dialog.id='companion-dialog';dialog.innerHTML='<button class="companion-close" aria-label="关闭">×</button><div id="companion-content"></div>';document.body.append(dialog);dialog.querySelector('button').onclick=()=>dialog.close();const make=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;return e;};

@@ -8,7 +8,7 @@ import {activeEquipment,EQUIPMENT,migrateQuestTools} from './camp-equipment.mjs'
 import {growth,discover} from './camp-growth.mjs';
 import {ARROWS,STAR_GOALS,unlockArrows,sceneTheme,rememberMilestone,trialSeed,trialReview} from './camp-experience.mjs';
 import {experienceEvent} from './experience-stats.mjs';
-import {atlasIcon,RELIC_RECTS} from './atlas-art.mjs?v=frames31';
+import {atlasIcon,RELIC_RECTS} from './atlas-art.mjs?v=frames32';
 import {chapterUnlocked,chapterScore,finishChapter} from './camp-challenge.mjs';
 import {aimCue} from './aim-ui.mjs';
 import {grantLoot,TRINKETS} from './camp-loot.mjs';

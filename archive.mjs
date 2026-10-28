@@ -6,7 +6,7 @@ import {unlockedOutfits} from './camp-wardrobe.mjs';
 import {EQUIPMENT,migrateQuestTools} from './camp-equipment.mjs';
 import {growth,sets,growthTitles,SECRETS} from './camp-growth.mjs';
 import {ARROWS,unlockArrows,STAR_GOALS,lootHint,duplicateCount,exchangeLoot} from './camp-experience.mjs';
-import {atlasIcon,RELIC_RECTS,PROP_RECTS} from './atlas-art.mjs?v=frames31';
+import {atlasIcon,RELIC_RECTS,PROP_RECTS} from './atlas-art.mjs?v=frames32';
 import{chapterUnlocked,chapterScore}from'./camp-challenge.mjs';
 import{TRINKETS,grantLoot}from'./camp-loot.mjs';
 import{QUESTS,chapterStars,titlesFor,questAvailable}from'./camp-rewards.mjs';
