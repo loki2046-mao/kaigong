@@ -1,4 +1,4 @@
-import {PROP_RECTS} from './atlas-art.mjs?v=frames32';
+import {PROP_RECTS} from './atlas-art.mjs?v=reward60';
 import {paintMechanism} from './mechanism-art.mjs?v=art7';
 import {lanternFall} from './camp-effects.mjs';
 const atlas=typeof Image!=='undefined'?new Image():null,straw=typeof Image!=='undefined'?new Image():null;

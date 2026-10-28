@@ -1,5 +1,30 @@
 /* Text is real, selectable, locally typeset; artwork contains no lettering. */
 .imperial-decree{--display-font:DecreeScript,DecreeRare;position:relative}
+.decree-save{position:absolute;right:12px;bottom:6px;z-index:4;min-height:36px;padding:6px 12px;border:1px solid #b99b66;background:#263039;color:#f3dfb7;font:16px DecreeScript,serif;cursor:pointer}
+.decree-save:disabled{opacity:.7;cursor:wait}
+@media(max-height:650px){.finale-paged .finale-metrics{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}.finale-paged .finale-metrics>div{padding:7px 2px!important}.finale-paged .finale-metrics strong{font-size:20px!important}.finale-paged .finale-metrics span{font-size:9px!important;white-space:nowrap}}
+@media(max-height:650px){.finale-paged .finale-hero{padding:10px!important}.finale-paged .finale-hero h2{margin:5px 0!important;font-size:27px!important}.finale-paged .finale-rank{margin:5px 0!important}.finale-paged .finale-lead{margin:8px 0!important}}
+.finale-shortcuts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.finale-shortcuts a{flex:1;min-width:90px;padding:8px;color:#f5d294;border:1px solid #bd955466;text-align:center;text-decoration:none;font-size:14px;background:#683a2e55}
+@media(max-width:400px){.finale-shortcuts{margin-top:6px;gap:4px}.finale-shortcuts a{min-width:0;font-size:10px;padding:5px 2px}}
+.finale-relic-row{display:flex;align-items:center;gap:14px;min-height:48px}
+.finale-relic-icon{display:inline-block;width:48px;height:48px;flex:0 0 48px;background:#d4b87a22;border-radius:6px}
+.finale-relic-icon svg{display:block;width:100%;height:100%}
+.finale-pagination{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;gap:8px!important}
+.finale-pagination select{min-width:0;width:100%;height:38px;background:#262a30;color:#f2d5a0;border:1px solid #a88a57;font:13px var(--display-font);padding:4px}
+.finale-pagination>span{display:none}
+.finale-pagination button{white-space:nowrap}
+@media(max-width:400px){.finale-pagination{padding:8px!important;gap:4px!important}.finale-pagination button{font-size:12px!important;padding:6px!important}.finale-pagination select{font-size:11px}}
+.finale-dialog.finale-paged{border:1px solid #d7ad62;background:radial-gradient(ellipse at top,#653728 0, #28252a 48%,#171e25 100%);box-shadow:0 0 0 5px #a7823d22,0 25px 100px #000b}
+.finale-paged .finale-hero{background:linear-gradient(0deg,#231b22f5,#351d2440),url('art/camp-ceremony-v4.webp') center 45%/cover;border-bottom:1px solid #d6aa5e;padding:30px 20px}
+.finale-paged .finale-hero h2{color:#ffe4a3;text-shadow:0 2px 5px #361710,0 0 24px #d28e4455;letter-spacing:4px}
+.finale-paged .finale-eyebrow{color:#f0c377;letter-spacing:9px}
+.finale-paged .finale-metrics>div{border:1px solid #bd95543d;background:#221a1d66;padding:12px 6px}
+.finale-paged .finale-metrics strong{color:#f5cb7e}
+.finale-paged .finale-todo h3{color:#f2cd87;border-left:3px solid #bf654c;padding-left:12px}
+.finale-paged .finale-pagination{background:#211b21bb}
+.finale-paged .finale-pagination button{background:#783b30;border-color:#bf9659;color:#fff0cf}
+@media(max-width:600px){.finale-paged .finale-hero{padding:18px 12px}.finale-paged .finale-metrics>div{padding:8px 4px}}
 .decree-loading{visibility:hidden}.decree-loading-label{position:absolute;inset:45% 0 auto;text-align:center;color:#62492d}
 :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-sheet{
  background:url('art/decree-silk-v4.webp') center/100% 100% no-repeat;border:0;border-radius:0;box-shadow:none;

@@ -2,7 +2,7 @@
 export function createSoundscape(isMuted, Context, assets={}) {
   let ctx=null,master=null,music=null,fx=null,nextBeat=0,step=0,pull=null,noise=null,wasPlaying=false,zoneAt=-99,musicLevel=.65,effectsLevel=.8,duckUntil=0;
   let hooves=null,horseSource=null,horseBuffer=assets.horseBuffer||null,horseLoading=null,horseError=null,hoofStep=0,wasMounted=false;
-  let jarBuffer=assets.jarBuffer||null,jarLoading=null,jarError=null;
+  let jarBuffer=assets.jarBuffer||null,jarLoading=null,jarError=null,wasCelebrating=false;
   const plucks=new Map(),foleyBuffers=new Map();let shotVariant=0;
   // Four eight-bar phrases: invitation, response, rising variation, resolution.
   const phrases=[
@@ -79,15 +79,23 @@ export function createSoundscape(isMuted, Context, assets={}) {
     else if(kind==='clear'){[74,78,81,86,83,86].forEach((n,i)=>note(n,t+i*.11,.3,.15));}
     else if(kind==='end'){[74,71,69].forEach((n,i)=>note(n,t+i*.14,.24,.1));}
   }
-  function update({state,holding=false,power=0,bow=null,aimZone=bow}){if(!ctx)return;const t=ctx.currentTime;const playing=state==='play'&&!isMuted();master.gain.setTargetAtTime(isMuted()?0:.85,t,.03);
+  function update({state,holding=false,power=0,bow=null,aimZone=bow}){if(!ctx)return;const t=ctx.currentTime;const celebrating=state==='finale',playing=(state==='play'||celebrating)&&!isMuted();master.gain.setTargetAtTime(isMuted()?0:.85,t,.03);
+    if(playing&&celebrating&&!wasCelebrating){
+      stopPull();stopHorse();nextBeat=t+.04;step=0;
+      // A brief arrival flourish; use the effects bus and respect existing volume controls.
+      [50,57,62,66,69,74].forEach((m,i)=>note(m,t+i*.09,.45,.1,fx,'triangle'));
+      rustle(t,.18,.09,1800,fx);
+    }
+    wasCelebrating=playing&&celebrating;
     if(playing&&!wasPlaying){nextBeat=t+.04;step=0;}if(!playing){nextBeat=t+.04;if(pull)stopPull();}wasPlaying=playing;
     music.gain.setTargetAtTime(playing?(t<duckUntil?.12:.48)*musicLevel:0,t,.08);
-    const mounted=playing&&!!bow?.mounted;
+    const mounted=playing&&!celebrating&&!!bow?.mounted;
     hooves.gain.setTargetAtTime(mounted?.85:0,t,.025);
     if(mounted&&horseBuffer&&!horseSource){horseSource=ctx.createBufferSource();horseSource.buffer=horseBuffer;horseSource.loop=true;horseSource.connect(hooves);horseSource.start(t);hoofStep++;}
     if(!mounted)stopHorse();
     wasMounted=mounted;
     if(playing){if(nextBeat<t-.15){nextBeat=t+.04;step=Math.ceil(step/32)*32;}let count=0;while(nextBeat<t+.12&&count++<8){
+      if(celebrating){const melody=[62,66,69,74,73,69,66,69,74,78,76,74,69,66,62,69],i=step%32;pluck(50+(i%8===4?7:0),nextBeat,.24,.9);if(i%2===0){flute(melody[Math.floor(i/2)],nextBeat,.7,.12);}if(i%8===0){drum(nextBeat,true);horn(62,nextBeat);}if(i%8===4)drum(nextBeat);nextBeat+=60/108/2;step++;continue;}
       const i=step%32,phrase=Math.floor(step/32)%4,n=phrases[phrase][i],bar=Math.floor(i/8),roots=[50,45,47,50],root=roots[bar];
       const intensity=bow?.chapter>=8?1.2:1;
       // Eighth-note low strings drive the rhythm; upper melody leaves room for impacts.
