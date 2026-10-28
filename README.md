@@ -50,3 +50,9 @@ npx wrangler pages deploy release/public --project-name kaigong-loki --branch ma
 ## 素材与许可
 
 代码见 LICENSE。字体 Ma Shan Zheng 采用 SIL OFL，说明随 `fonts/` 分发。声音来源见 `audio/SOURCES.md`。V4 冬营和演武场背景为本项目生成的原创场景；人物和其他图像沿用项目素材。公开代码不包含账号密钥或玩家档案。
+
+## 作者与相关作品
+
+由[赛博小熊猫 Loki](https://hiloki.ai/about)制作与维护。用 AI 做产品、做内容，把真实制作中的修改、取舍和方法留下来。
+
+[个人网站](https://hiloki.ai/) · [作品与制作记录](https://hiloki.ai/works) · [公众号文章](https://hiloki.ai/articles/) · [GitHub](https://github.com/loki2046-mao)
