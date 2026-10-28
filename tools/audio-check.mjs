@@ -1,6 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSoundscape} from '../audio.mjs';
+test('凯旋播放专用音乐且不播放马蹄，静音和关闭庆典停止调度',()=>{
+ const m=mock();let muted=false;const a=createSoundscape(()=>muted,m.Context,{horseBuffer:{}});a.ensure();
+ a.update({state:'finale',bow:{mounted:true}});assert.ok(a.info().scheduledSteps>0);assert.equal(a.info().hoofSteps,0);
+ const count=m.nodes.length;a.update({state:'finale'});assert.equal(m.nodes.length,count,'同一帧不重复开场音效');
+ const steps=a.info().scheduledSteps;muted=true;m.setTime(1);a.update({state:'finale'});assert.equal(a.info().scheduledSteps,steps);
+ muted=false;m.setTime(2);a.update({state:'paused'});assert.equal(a.info().scheduledSteps,steps);a.dispose();
+});
 function mock(){let contexts=0,nodes=[],clock=0;const parameter=()=>({value:0,setValueAtTime(){},exponentialRampToValueAtTime(){},linearRampToValueAtTime(){},cancelScheduledValues(){},setTargetAtTime(){}});const node=()=>{const n={frequency:parameter(),gain:parameter(),threshold:parameter(),ratio:parameter(),Q:parameter(),connect(){},started:null,stopped:null,start(t){this.started=t},stop(t){this.stopped=t}};nodes.push(n);return n;};class Context{constructor(){contexts++;this.sampleRate=8000;this.state='running';this.destination={};}get currentTime(){return clock}createGain(){return node()}createOscillator(){return node()}createBiquadFilter(){return node()}createDynamicsCompressor(){return node()}createBufferSource(){return node()}createBuffer(){return {getChannelData:()=>new Float32Array(8000)}}resume(){return Promise.resolve()}close(){this.state='closed';return Promise.resolve()}}return {Context,nodes,setTime:t=>clock=t,contexts:()=>contexts};}
 test('静音或用户还未激活时，音频更新不会创建 AudioContext',()=>{const m=mock();let muted=true;const a=createSoundscape(()=>muted,m.Context);a.update({state:'play'});a.beginPull();a.event('start');assert.equal(m.contexts(),0);muted=false;a.update({state:'play'});assert.equal(m.contexts(),0);assert.equal(a.ensure(),true);assert.equal(m.contexts(),1);});
 test('松手、失手、暂停、静音都终止持续拉弓声',()=>{for(const action of ['release','fail','pause','mute']){const m=mock();let muted=false;const a=createSoundscape(()=>muted,m.Context);a.ensure();a.beginPull();assert.equal(a.info().pulling,true);if(action==='release')a.stopPull();if(action==='fail')a.event('short');if(action==='pause')a.update({state:'paused'});if(action==='mute'){muted=true;a.mute()}assert.equal(a.info().pulling,false);const sustained=m.nodes.filter(n=>n.started!==null);assert.ok(sustained.every(n=>n.stopped!==null));a.dispose();}});

@@ -200,3 +200,23 @@
 @media(max-width:340px){
   :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-sheet{grid-template-columns:22px 38px minmax(0,1fr) 22px}
 }
+
+/* The victory ledger uses six destinations, not a forty-entry page menu. */
+.finale-page-picker{min-width:0;text-align:center}
+.finale-pagination .finale-page-count{display:block!important;font-size:10px;line-height:1.4;color:#c9b891;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.finale-page-picker select{height:30px!important;font:15px var(--display-font);border-color:#aa9058;background:#222d34;color:#f3dcb0}
+.finale-item-caption{display:block;min-width:0}
+.finale-item-caption small{display:block;color:#bdb7a7;font:12px/1.6 system-ui;margin-top:5px}
+.finale-paged .finale-collection .finale-item-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.finale-paged .finale-collection .finale-relic-row{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:16px 8px;text-align:center;background:linear-gradient(140deg,#bb955522,#38282144);border:1px solid #bd955455;border-radius:3px;min-height:144px;font:16px/1.5 var(--display-font)}
+.finale-paged .finale-collection .finale-relic-icon{width:74px;height:74px;flex:0 0 74px;display:block}
+@media(max-width:699px){.finale-paged .finale-collection .finale-item-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.finale-paged .finale-collection .finale-relic-row{min-height:108px;padding:8px 4px;gap:5px;font-size:14px}.finale-paged .finale-collection .finale-relic-icon{width:54px;height:54px;flex-basis:54px}.finale-page-picker select{font-size:13px}.finale-page-count{font-size:9px!important}}
+@media(max-height:650px){.finale-paged .finale-collection .finale-relic-row{min-height:95px;padding:5px 3px;font-size:12px}.finale-paged .finale-collection .finale-relic-icon{width:44px;height:44px;flex-basis:44px}}
+@media(prefers-reduced-motion:reduce){.finale-ribbons i{animation:none}}
+
+.finale-item-list>p{font-size:14px;line-height:1.7;padding:8px 0;margin:0;border-bottom:1px solid #bca57d33}
+
+.finale-hero h2{text-wrap:balance}.finale-paged .finale-collection .finale-item-caption{overflow-wrap:anywhere}
+@media(max-width:350px){.finale-paged .finale-hero h2{font-size:24px!important;letter-spacing:1px}}
+
+.finale-sound{position:absolute;top:6px;left:12px;z-index:3;min-height:36px;padding:5px 10px;background:#17232bdb;color:#eadbb9;border:1px solid #9b875e;font:12px var(--display-font)}
