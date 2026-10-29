@@ -140,3 +140,74 @@ body.archive-paged{height:100dvh;min-height:0;overflow:hidden}.archive-paged mai
 :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-title:before{left:8%}
 :is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-title:after{right:8%;transform:translateY(-50%) scaleX(-1)}
 @media(max-width:600px){:is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-title:before,:is(#result-dialog.report-paged,.finale-dialog.finale-paged) .decree-title:after{width:39px;height:16px;opacity:.6}}
+
+.journey-dialog{box-sizing:border-box;width:min(92vw,620px);max-height:calc(100dvh - 24px);padding:clamp(16px,3vw,28px);background:#f2eddd;color:#29343d;border:1px solid #b49a68;border-radius:6px;font-family:KaigongDisplay,serif}
+.journey-dialog::backdrop{background:#101720c9}.journey-heading,.journey-tabs,.journey-actions,.journey-pager{display:flex;align-items:center;gap:10px;justify-content:space-between}.journey-heading h2{margin:0;font-size:28px}.journey-heading button{min-width:44px;min-height:44px}.journey-current{font-size:15px;color:#775b35;margin:12px 0}.journey-tabs button{flex:1;min-height:44px}.journey-tabs [aria-pressed=true]{background:#914a36;color:#fff1d3}.journey-card{border-block:1px solid #c9b78f;padding:16px 0;margin:16px 0;min-height:100px}.journey-card h3{font-size:24px;margin:0 0 10px}.journey-card p{font-size:16px;line-height:1.5;margin:0}.journey-actions>*{flex:1;text-align:center;padding:10px;min-height:44px;box-sizing:border-box}.journey-actions a{background:#914a36;color:#fff1d3;text-decoration:none;border-radius:4px}.journey-pager{margin-top:16px}.journey-pager button{min-width:44px;min-height:44px}.reward-purpose{font-size:14px;line-height:1.45;color:#725536}
+@media(max-height:500px){.journey-dialog{padding:12px}.journey-current{margin:6px 0}.journey-card{padding:8px 0;margin:8px 0;min-height:0}.journey-card h3{font-size:20px}.journey-pager{margin-top:6px}}
+
+.loadout-overview p{line-height:1.8}.loadout-overview a{display:block;margin-top:18px;color:#944835;font:22px var(--display-font)}.loadout-presets article{padding:16px;border-block:1px solid #b5a58577}.loadout-presets strong{font:24px var(--display-font)}.armory-goal{color:#795d36;font-size:15px}
+
+.journey-dialog .journey-actions a,.journey-dialog button{font:18px/1.4 var(--display-font);letter-spacing:0}.journey-dialog .journey-actions a{white-space:nowrap;display:flex;align-items:center;justify-content:center}.journey-dialog .journey-actions button{font-size:16px}.journey-dialog .journey-pager button{font-size:18px}
+
+.story-dialog{position:relative}.story-dialog .story-portrait{float:right;width:92px;height:102px;margin:10px 0 8px 12px}.story-dialog>h3{font:24px/1.4 var(--display-font);margin:18px 0 10px}.story-dialog>p{font:18px/1.7 var(--display-font);margin:12px 0}.story-dialog>small{color:#806b4b;line-height:1.5}.story-actions{display:flex;clear:both;gap:10px;margin-top:20px}.story-actions>*{flex:1;min-height:44px;padding:10px;text-align:center;font:18px var(--display-font)}.story-actions a{background:#914a36;color:#fff1d3;text-decoration:none}.story-dialog .atlas-icon{width:100%;height:100%}@media(max-height:600px){.story-dialog>p{font-size:16px;margin:8px 0}.story-dialog>h3{font-size:20px;margin:10px 0}.story-dialog .story-portrait{width:68px;height:76px}.story-actions{margin-top:10px}}
+
+@media(max-height:460px) and (min-width:700px){
+ .archive-paged main{padding:6px 18px;grid-template-rows:24px 40px 32px minmax(0,1fr) 44px 12px;gap:4px}
+ .archive-paged main>[data-page]{padding:10px 14px!important}.archive-paged .paper>h2{font-size:20px;margin-bottom:5px}
+ .archive-paged #armory[data-sheet="当前配装"]{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
+ .archive-paged #armory[data-sheet="当前配装"]>p:first-of-type{margin:0;text-align:right}
+ .loadout-overview{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center}
+ .loadout-overview h3{font-size:18px;margin:0}.loadout-overview p{grid-row:2;font-size:15px;line-height:1.4;margin:3px 0}.loadout-overview small{grid-row:3;font-size:12px}.loadout-overview a{grid-column:2;grid-row:1/4;font-size:18px;margin:0;padding:10px;border:1px solid #b5a585}
+ .archive-paged #armory>.armory-goal{grid-column:1/-1;font-size:13px;margin:2px 0}
+ .loadout-presets h3{margin:0;font-size:20px}.loadout-presets article{padding:8px;display:grid;grid-template-columns:1fr auto;gap:5px}.loadout-presets article p{margin:4px 0}.loadout-presets article button{grid-column:2;grid-row:1/3}
+ #backup-controls{margin:5px auto;max-width:none;grid-template-columns:repeat(3,1fr);gap:10px}#backup-controls p{grid-column:1/-1;font-size:16px;margin:0}#backup-controls button{font-size:16px}
+}
+@media(max-height:650px){.loadout-overview h3{margin:5px 0;font-size:20px}.loadout-overview p{font-size:16px;line-height:1.5;margin:6px 0}.loadout-overview small{font-size:12px;line-height:1.4;display:block}.loadout-overview a{margin-top:8px;font-size:18px;min-height:36px;display:flex;align-items:center}.archive-paged #armory>.armory-goal{margin:8px 0 0;font-size:13px;line-height:1.5}.loadout-presets h3{margin:4px 0}.loadout-presets article{padding:8px}.loadout-presets article p{font-size:16px;margin:8px 0}}
+
+.loadout-overview,.loadout-presets,.armory-goal{font-family:var(--display-font)}
+@media(max-height:650px){
+ #result-dialog.report-paged #chapter-result{padding-bottom:8px}
+ #result-dialog.report-paged #chapter-result-title{font-size:18px;line-height:1.4;margin:0 0 5px}
+ #result-dialog.report-paged #chapter-result-score{font-size:14px;line-height:1.5}
+ #result-dialog.report-paged #chapter-result-best{font-size:10px;margin:4px 0 0}
+ #result-dialog.report-paged #reward-card{grid-template-columns:64px minmax(0,1fr);gap:10px;padding:8px}
+ #result-dialog.report-paged #reward-name{font-size:18px;line-height:1.4;margin:6px 0}
+ #result-dialog.report-paged .reward-purpose{font-size:12px;line-height:1.45;margin:6px 0}
+ #result-dialog.report-paged #reward-card a{font-size:13px;line-height:1.4;padding:6px 0}
+ #result-dialog.report-paged #pay-receipt{font-size:14px;line-height:1.5;margin:0}
+ #result-dialog.report-paged .result-actions button{font-size:16px;letter-spacing:0;min-height:44px;padding:8px}
+}
+
+@media(max-height:460px) and (min-width:700px){
+ .archive-paged #growth-panel{display:grid;grid-template-columns:1fr 1.5fr;gap:6px 20px;align-items:center}
+ .archive-paged #growth-panel>small{grid-column:1;font-size:13px}.archive-paged #growth-panel>h2{grid-column:1;font-size:28px;margin:0}
+ .archive-paged #growth-panel progress{grid-column:1;height:10px;margin:0}.archive-paged #growth-panel>p{grid-column:2;grid-row:1/3;font-size:16px;margin:0;line-height:1.5}
+ .archive-paged #growth-panel>p.growth-rules{grid-column:2;grid-row:3/5;font-size:13px}
+ .archive-paged .wardrobe-preview{height:80px}.archive-paged #titles .gear-list h3{font-size:20px;margin:0}.archive-paged #titles .gear-list button{padding:6px;font-size:14px}.archive-paged #titles .gear-list{gap:6px}
+}
+.growth-rules{font-size:13px;line-height:1.6}
+.archive-paged #growth-panel{padding:0;margin:0;border:0}.archive-paged #growth-panel h2{margin:8px 0}.archive-paged #growth-panel p{margin:8px 0}.archive-paged #growth-panel .growth-rules{font-size:13px;line-height:1.5}
+
+.camp-menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}.camp-menu-grid a{font:19px/1.5 var(--display-font);text-decoration:none;color:#5c402a;border:1px solid #b9a27a;background:#e7ddc5;padding:14px 10px;text-align:center;min-height:48px;display:grid;place-items:center}.camp-menu-grid a:hover{background:#decba5}@media(max-height:460px){.camp-menu-grid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:12px}.camp-menu-grid a{font-size:17px;padding:10px}}
+
+/* In phone landscape the chapter menu becomes a rail, leaving room for the page. */
+@media(max-height:460px) and (min-width:700px){
+ .archive-paged main{grid-template-columns:118px minmax(0,1fr);grid-template-rows:24px 32px minmax(0,1fr) 44px 12px;gap:4px 12px}
+ .archive-paged main>header{grid-column:1/-1}.archive-paged #archive-tabs{grid-column:1;grid-row:2/5;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(6,minmax(0,1fr))}
+ .archive-paged .archive-subnav{grid-column:2;grid-row:2}.archive-paged main>[data-page]{grid-column:2;grid-row:3}
+ .archive-paged .archive-pagination{grid-column:2;grid-row:4}.archive-paged .credits{grid-column:1/-1;grid-row:5}
+ .archive-paged #stars,.archive-paged #quests,.archive-paged #collection,.archive-paged #set-gallery,.archive-paged .armory-grid{grid-template-columns:1fr}
+ .archive-paged #loot-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .archive-paged #stars .chapter-tile{display:grid;grid-template-columns:1fr auto;gap:3px 10px;padding:8px}
+ .archive-paged .chapter-tile>small:first-child{grid-column:1}.archive-paged #stars .chapter-tile h3{grid-column:1;font-size:23px;margin:0}
+ .archive-paged .chapter-tile .star-score{grid-column:2;grid-row:1/3;align-self:center}.archive-paged .chapter-tile>p:nth-child(4){display:none}
+ .archive-paged #stars .chapter-tile p{grid-column:1/-1;margin:2px 0;font-size:13px}.archive-paged .chapter-tile>a{grid-column:1/-1;justify-self:start}
+ .archive-paged .entry{display:grid;grid-template-columns:110px 1fr;gap:6px 15px;padding:10px}.archive-paged .entry .specimen{grid-row:1/3;width:110px;height:100px;margin:0}.archive-paged .entry h3{margin:0;align-self:end}.archive-paged .entry p{margin:0}
+ .archive-paged .armory-item{padding:8px;display:grid;grid-template-columns:1fr auto;gap:4px 8px}.archive-paged .armory-item p{grid-column:1/-1;margin:3px 0;font-size:13px}.archive-paged .armory-item h3{grid-column:1;font-size:22px;margin:0}.archive-paged .armory-item strong{grid-column:2;grid-row:1/3;align-self:center}.archive-paged .armory-item button{margin:0;min-height:40px;font-size:14px}
+ .archive-paged .record h3{font-size:21px;margin:0}.archive-paged .record p{margin:5px 0;line-height:1.5}.archive-paged #records blockquote{font-size:16px;margin:6px 0;line-height:1.5}
+}
+@media(max-height:460px) and (min-width:700px){
+ .archive-paged [data-page=loot]>label{display:flex;align-items:center;gap:10px;font-size:12px;line-height:1.4}.archive-paged #loot-filter{height:30px;padding:3px 8px;font-size:14px}
+ .archive-paged #loot-count{font-size:11px;line-height:1.4;margin:3px 0 6px}.archive-paged #loot-gallery{margin-top:6px}
+ .archive-paged #loot-gallery .relic-icon,.archive-paged #loot-gallery .relic-mystery{height:42px}.archive-paged #loot-gallery .relic>span{font-size:16px;line-height:1.3}.archive-paged #loot-gallery .relic{padding:5px}.archive-paged #loot-gallery .relic small{font-size:10px}
+}

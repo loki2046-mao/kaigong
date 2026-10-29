@@ -41,3 +41,5 @@
 .field-training #book-grid small{color:#ccb88b;font-size:12px}
 .field-training #book-intro{margin:8px 0}
 @media(max-width:600px){.field-training .field-heading p{max-width:100%;font-size:12px}.field-training #done-actions button{font-size:17px}}
+
+.field-training main{grid-template-columns:minmax(0,1fr)!important}.field-training main>*{min-width:0}.field-training #aim{grid-template-columns:minmax(0,1fr) 220px}.field-training #aim>*{min-width:0}@media(max-width:600px){.field-training #aim{grid-template-columns:minmax(0,1fr) 105px}.field-training header{gap:3px}.field-training header>*{min-width:0}.field-training header button{white-space:nowrap}}
