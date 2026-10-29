@@ -1,3 +1,5 @@
+import {storyState,STORY_CHOICES} from './camp-story.mjs';
+import {PRECISION} from './precision-challenges.mjs';
 import {TRINKETS} from './camp-loot.mjs';
 import {GOODS} from './camp-economy.mjs';
 import {HONORS} from './camp-honors.mjs';
@@ -11,13 +13,15 @@ import {atlasIcon,RELIC_RECTS} from './atlas-art.mjs?v=reward60';
 export function appendEarned(body,p){
   const overview=body.querySelector('.finale-lead');
   const shortcuts=document.createElement('span');shortcuts.className='finale-shortcuts';
-  for(const [label,href] of [['历练星图','archive.html#journey'],['营中委托','archive.html#quests'],['百宝藏阁','archive.html#loot'],['军需装备','archive.html#armory']]){const a=document.createElement('a');a.textContent=label+' ↗';a.href=href;shortcuts.append(a);}
+  for(const [label,href] of [['历练星图','archive.html#journey'],['营中委托','archive.html#quests'],['百宝藏阁','archive.html#loot'],['军需装备','archive.html#armory'],['精进三试','field.html?mode=challenge']]){const a=document.createElement('a');a.textContent=label+' ↗';a.href=href;shortcuts.append(a);}
   overview.append(shortcuts);
   const groups=[['军功封赏',[
     `累计军饷 ${p.armory?.earned||0} 文 · 当前结余 ${p.armory?.balance||0} 文`,
     ...HONORS.flatMap(([rank,grade],c)=>p.honors?.[c]?[`第${c+1}回封赏 · ${rank} · ${grade}`]:[]),
   ]],['同袍与奇遇',[
     ...QUESTS.filter(q=>p.quests?.[q.id]?.claimed).map(q=>`${q.npc} · ${q.title}｜谢礼：${TRINKETS.find(t=>t.id===q.gift)?.name||q.reward} · 称号「${q.reward}」`),
+    ...(storyState(p).stage==='complete'?[`老周 · 归营热饭｜${STORY_CHOICES[storyState(p).choice].ending}`]:[]),
+    ...PRECISION.filter(x=>p.precisionRecords?.[x.index]).map(x=>`精进 · ${x.title}｜最佳 ${p.precisionRecords[x.index].shots} 箭 · 纪念：${x.reward}`),
     ...SECRETS.filter(s=>p.secrets?.[s.id]).map(s=>`营中奇遇 · ${s.name}｜纪念：${TRINKETS.find(t=>t.id===s.gift)?.name||s.name}`),
   ]],['所得称号',[
     ...[...new Set([...titlesFor(p),...growthTitles(p)])].map(title=>`获得称号 · ${title}`),

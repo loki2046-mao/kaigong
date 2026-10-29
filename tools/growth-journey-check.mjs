@@ -1,0 +1,19 @@
+import {chromium} from 'playwright';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({channel:'chrome',headless:true});const page=await browser.newPage({viewport:{width:390,height:844}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const base='http://127.0.0.1:8766';
+async function shoot(){await page.locator('#draw').focus();await page.keyboard.down('Space');try{await page.waitForFunction(()=>{const z=document.querySelector('#zone'),power=Number(document.querySelector('#power').textContent.replace('%',''));return power>=parseFloat(z.style.left)+parseFloat(z.style.width)*.40&&power<=parseFloat(z.style.left)+parseFloat(z.style.width)*.75&&z.style.opacity!=='0.25';},null,{timeout:6500,polling:'raf'});}catch{}await page.keyboard.up('Space');await page.waitForTimeout(1800);}
+try{
+await page.goto(base+'/camp.html');await page.evaluate(()=>localStorage.setItem('kg-v3-muted','true'));
+await page.goto(base+'/field.html?mode=challenge');
+for(let trial=0;trial<3;trial++){for(let shot=0;shot<18&&!await page.locator('#done-actions').isVisible();shot++)await shoot();assert.ok(await page.locator('#done-actions').isVisible(),'precision '+trial+' completion');console.log('completed precision',trial,await page.locator('#feedback').innerText());if(trial<2)await page.locator('#next').click();}
+const first=await page.evaluate(()=>JSON.parse(localStorage.getItem('kg-profiles-v1')).slots[0]);assert.equal(Object.keys(first.precisionRecords).length,3);assert.equal(first.armory.balance,150);await page.locator('#retry').click();await page.locator('#risk').click();for(let i=0;i<12&&!await page.locator('#done-actions').isVisible();i++)await shoot();assert.ok(await page.locator('#done-actions').isVisible());assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('kg-profiles-v1')).slots[0].armory.balance),150);console.log('replay reward idempotent, risk route played');
+await page.goto(base+'/camp.html');await page.getByRole('button',{name:'伙头兵 老周',exact:true}).click();await page.getByRole('button',{name:'营中往事 · 归营热饭'}).click();await page.getByRole('button',{name:'先备热饭',exact:true}).click();await page.getByRole('button',{name:'关闭故事'}).click();
+// Play the first two actual campaign missions, then return to the NPC for stage two.
+for(let m=0;m<2;m++){for(let i=0;i<10&&!await page.locator('#next').isVisible();i++)await shoot();assert.ok(await page.locator('#next').isVisible());if(m===0)await page.locator('#next').click();}
+await page.getByRole('button',{name:'伙头兵 老周',exact:true}).click();await page.getByRole('button',{name:'营中往事 · 归营热饭'}).click();await page.getByRole('button',{name:'接下试靶的事',exact:true}).click();await page.getByRole('link',{name:'去校场办差 →'}).click();
+// Continue the real campaign: lantern, gate and final target. No state injection.
+for(let m=2;m<=4;m++){for(let i=0;i<18&&!await page.locator('#next').isVisible();i++)await shoot();assert.ok(await page.locator('#next').isVisible(),'campaign mission '+m);if(m<4)await page.locator('#next').click();}
+if(await page.locator('#result-dialog').isVisible())await page.locator('#result-close').click();
+await page.getByRole('button',{name:'伙头兵 老周',exact:true}).click();await page.getByRole('button',{name:'营中往事 · 归营热饭'}).click();await page.getByRole('button',{name:'收下谢礼 · 归营落座'}).click();assert.ok(await page.getByText('谢礼已收入行囊',{exact:false}).isVisible());await page.getByRole('button',{name:'关闭故事'}).click();await page.reload();const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('kg-profiles-v1')).slots[0]);assert.equal(after.stories['warm-return'].stage,'complete');assert.ok(after.armory.receipts['story-warm-return']);assert.equal(after.progress.mission,5);assert.deepEqual(errors,[]);console.log('Story choice, actual shots, stage transition, claim and reload passed.');
+}finally{await browser.close();}

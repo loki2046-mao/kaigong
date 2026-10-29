@@ -1,3 +1,4 @@
+import {applyFitting} from './loadout-summary.mjs';
 import {makeBow,makeDraw,judge,flightTime,advanceDraw,zoneAt} from './engine.mjs';
 
 export const EXERCISES=[
@@ -9,9 +10,9 @@ export const EXERCISES=[
  {title:'校尉演武',rule:'断索、穿门、过帘，最后击坛收阵。',steps:['latch','gate','flag','jar'],theme:'fort',ending:'机关有先后，开弓有取舍。六场演武，功成。'}
 ];
 export function createExercise(index=0){return {index:Math.max(0,Math.min(5,index)),phase:0,route:'safe',shots:0,hits:0,perfect:0,misses:0,done:false,openedAt:null,elapsed:0};}
-export function exerciseSteps(s){if(s.index===1&&s.route==='risk')return ['jar'];if(s.index===4&&s.route==='risk')return ['rope'];return EXERCISES[s.index].steps;}
-export function exerciseBow(s){const kind=exerciseSteps(s)[s.phase];return {...makeBow(0,'field-training'),index:0,chapter:0,type:'soft',phase:.2,kind,distance:48+s.index*3,strength:1,gain:27,wobble:0,wind:s.index===4?5:0,mounted:false,moving:s.index===2||s.index===4,speed:s.index===2?1.5:.8,targetAmplitude:s.index===4?12:0,horizontalAmplitude:s.index===2?42:0,horizontalSpeed:s.index===2?.9:0,rideAmplitude:0,radius:s.index===1&&s.route==='risk'?19:kind==='latch'||kind==='rope'?22:32,targetY:kind==='latch'||kind==='rope'?410:442,required:1};}
-export function exerciseOpen(s,elapsed){const kind=exerciseSteps(s)[s.phase];if(kind==='flag')return Math.cos(elapsed*2*Math.PI/3.6)>-.25;if(kind==='gate'&&s.openedAt!==null)return ((elapsed-s.openedAt)%4+4)%4<2.6;return true;}
+export function exerciseSteps(s){if(s.challenge&&s.index===0)return ['latch','gate','disc'];if(s.index===1&&s.route==='risk')return ['jar'];if(s.index===4&&s.route==='risk')return ['rope'];return EXERCISES[s.index].steps;}
+export function exerciseBow(s){const kind=exerciseSteps(s)[s.phase];const bow={...makeBow(0,'field-training'),index:0,chapter:0,type:'soft',phase:.2,kind,distance:48+s.index*3,strength:1,gain:27,wobble:0,wind:s.index===4?5:0,mounted:false,moving:s.index===2||s.index===4,speed:s.index===2?1.5:.8,targetAmplitude:s.index===4?12:0,horizontalAmplitude:s.index===2?42:0,horizontalSpeed:s.index===2?.9:0,rideAmplitude:0,radius:s.index===1&&s.route==='risk'?19:kind==='latch'||kind==='rope'?22:32,targetY:kind==='latch'||kind==='rope'?410:442,required:1};if(s.challenge){bow.gain=30;bow.wind=s.index===3?(s.phase===0?3:-3):0;bow.moving=s.index===0&&s.phase===2;bow.targetAmplitude=bow.moving?10:bow.targetAmplitude;}if(s.fitting){bow.wind=5;bow.mounted=!!s.fittingMounted;bow.rideAmplitude=bow.mounted?12:0;return applyFitting(bow,s.fitting);}return bow;}
+export function exerciseOpen(s,elapsed){const kind=exerciseSteps(s)[s.phase];if(kind==='flag')return Math.cos(elapsed*2*Math.PI/(s.challenge?(s.phase===0?3.6:2.8):3.6))>-.25;if(kind==='gate'&&s.openedAt!==null)return ((elapsed-s.openedAt)%4+4)%4<2.6;return true;}
 export function exerciseJudge(s,power,draw=makeDraw()) {const b=exerciseBow(s),r=judge(b,power,draw),aligned=['good','perfect'].includes(r.kind),blocked=aligned&&!exerciseOpen(s,draw.elapsed+flightTime(b));return {...r,kind:blocked?'blocked':r.kind,blocked,hit:aligned&&!blocked};}
 export function settleExercise(s,r){if(s.done)return false;s.shots++;if(!r.hit){s.misses++;return false;}s.hits++;if(r.kind==='perfect')s.perfect++;if(exerciseSteps(s)[s.phase]==='latch')s.openedAt=s.elapsed;if(s.phase+1<exerciseSteps(s).length)s.phase++;else s.done=true;return true;}
 export function exerciseStars(s){return s.done?1+Number(s.misses===0)+Number(s.perfect>0):0;}

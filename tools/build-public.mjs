@@ -17,4 +17,4 @@ console.log('Public files built in release/public');
 
 await appendFile(new URL('_headers',out),"/art/*\n  Cache-Control: public, max-age=86400\n/audio/*\n  Cache-Control: public, max-age=86400\n");
 
-await writeFile(new URL('version.json',out),JSON.stringify({version:'6.4.1',release:'chapter-outfits-20261029',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
+await writeFile(new URL('version.json',out),JSON.stringify({version:'6.5.0',release:'camp-growth-20261030',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
