@@ -3,7 +3,7 @@ import {awardHonors,restoreHonors} from './camp-honors.mjs';
 import {renderDecree,showFinale} from './ceremony-ui.mjs?v=celebration2';
 import {GOODS,migratePay,missionPay,questPay,starPay,loadout,account} from './camp-economy.mjs';
 import {installCompanions} from './camp-companions.mjs';
-import {outfitTier} from './camp-wardrobe.mjs';
+import {outfitTier} from './camp-wardrobe.mjs?v=stage62';
 import {activeEquipment,EQUIPMENT,migrateQuestTools} from './camp-equipment.mjs';
 import {growth,discover} from './camp-growth.mjs';
 import {ARROWS,STAR_GOALS,unlockArrows,sceneTheme,rememberMilestone,trialSeed,trialReview} from './camp-experience.mjs';
