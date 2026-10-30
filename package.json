@@ -1,6 +1,6 @@
 {
   "name": "kaigong",
-  "version": "6.5.0",
+  "version": "6.5.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "test": "node --test tools/check.mjs tools/audio-check.mjs tools/scene-check.mjs tools/camp-check.mjs tools/stats-check.mjs tools/viewport-check.mjs tools/experience-check.mjs tools/growth-check.mjs tools/equipment-check.mjs tools/economy-check.mjs tools/honors-check.mjs tools/field-check.mjs tools/profile-backup-check.mjs tools/growth-systems-check.mjs"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "linkedom": "0.18.13",
     "playwright": "^1.64.1"
   }

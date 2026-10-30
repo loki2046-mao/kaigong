@@ -1,0 +1,5 @@
+import {chromium} from 'playwright';import assert from 'node:assert/strict';
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-proxy-server','--disable-quic']});
+const root=process.env.KG_URL||'http://127.0.0.1:8766';
+for(const failCount of [0,1,3]){const page=await browser.newPage();let attempts=0;await page.route(/\/camp\.[a-f0-9]{12}\.mjs/,route=>{attempts++;return attempts<=failCount?route.abort('failed'):route.continue();});await page.goto(root+'/camp.html');if(failCount===3){await page.getByRole('button',{name:'重新加载',exact:true}).waitFor();assert.equal(attempts,3);}else{await page.locator('#objective-open').waitFor();assert.equal(await page.locator('#startup-status').count(),0);await page.locator('#draw').focus();await page.keyboard.down('Space');await page.waitForTimeout(400);assert.ok(parseInt(await page.locator('#power').innerText())>0);await page.keyboard.up('Space');await page.waitForTimeout(1600);assert.ok(attempts>failCount);}console.log('PASS startup failures:',failCount,'requests:',attempts);await page.close();}
+await browser.close();
