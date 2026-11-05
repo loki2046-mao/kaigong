@@ -6,3 +6,6 @@ test('四程、军令、路线奖励可闭环，重复结算不重领',()=>{cons
 test('危险由出箭触发；同行救援只生效一次；粮尽失败',()=>{const s=createExpedition({route:'risk',companion:'cook',charm:'bell'});for(let i=0;i<2;i++)settleExpedition(s,miss);assert.equal(s.cargo,3);assert.equal(s.used.cook,true);for(let i=0;i<6;i++)settleExpedition(s,miss);assert.equal(s.status,'lost');const shots=s.shots;settleExpedition(s,hit);assert.equal(s.shots,shots);});
 test('连珠第三次命中推进两步；失手断连势',()=>{const s=createExpedition({style:'swift'});s.stage=1;s.selected='disc';s.streak=2;settleExpedition(s,hit);assert.equal(s.counts.disc,2);settleExpedition(s,miss);assert.equal(s.streak,0);});
 test('损坏存档不继续游戏',()=>{assert.equal(restoreExpedition({}),null);const s=createExpedition();s.cargo=-1;assert.equal(restoreExpedition(s),null);});
+
+import {orderAdvice,nextEscortGoal} from '../expedition-engine.mjs';
+test('军令建议依据损粮和命中；收集目标依据领取凭据',()=>{const s=createExpedition();assert.equal(orderAdvice(s).id,'calm');s.shots=5;s.perfect=4;assert.equal(orderAdvice(s).id,'rush');s.cargo=2;assert.equal(orderAdvice(s).id,'shelter');const p={armory:{receipts:{}}};assert.equal(nextEscortGoal(p).route,'safe');for(const key of ['escort-route-safe','escort-full','escort-clever'])p.armory.receipts[key]=true;assert.equal(nextEscortGoal(p).route,'risk');p.armory.receipts['escort-route-risk']=true;assert.equal(nextEscortGoal(p),null);});

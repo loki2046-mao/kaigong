@@ -26,3 +26,18 @@ export function restoreExpedition(raw){if(!raw||raw.version!==1||!['play','clear
 export function claimExpedition(profile,s){if(s.status!=='won')return {amount:0,gifts:[]};const a=account(profile),key='escort-first-'+s.route;let amount=0;const gifts=[];function grant(id,gift,label){if(a.receipts[id])return;a.receipts[id]=true;profile.loot??={};profile.loot[gift]=(profile.loot[gift]||0)+1;gifts.push({id:gift,label});}
  if(!a.receipts[key]){a.receipts[key]=true;amount=s.route==='risk'?100:80;a.balance+=amount;a.earned+=amount;a.ledger.unshift({id:key,label:'夜护粮车 · '+(s.route==='risk'?'山径':'营道')+'首通',amount,at:Date.now()});a.ledger=a.ledger.slice(0,60);}
  grant('escort-route-'+s.route,s.route==='risk'?'relic-6-1':'relic-6-0',s.route==='risk'?'巡边卷图':'运粮铜符');if(s.cargo===3)grant('escort-full','relic-6-3','粮车木模');if(s.paths.includes('连锁清哨')&&s.paths.includes('断绳收帘'))grant('escort-clever','relic-6-2','传令皮囊');profile.expedition??={};profile.expedition.best??={};const old=profile.expedition.best[s.route];if(!old||s.cargo>old.cargo||s.cargo===old.cargo&&s.shots<old.shots)profile.expedition.best[s.route]={cargo:s.cargo,shots:s.shots,style:s.style,paths:s.paths,at:Date.now()};return {amount,gifts};}
+
+// Advice is derived from this run; it never changes the player's choice.
+export function orderAdvice(s){
+ if(s.cargo<3)return {id:'shelter',reason:`只剩${s.cargo}袋粮，护粮令先补回1袋，再多留一次出箭余量。`};
+ if(s.shots>0&&s.perfect/s.shots>=.6)return {id:'rush',reason:`前半程${s.shots}箭有${s.perfect}次神射，疾行令能让神射一箭抵两次。`};
+ return {id:'calm',reason:'粮袋完整，先放宽弱点判定，后半程更容易命中。'};
+}
+export function nextEscortGoal(p){
+ const r=p.armory?.receipts||{};
+ if(!r['escort-route-safe'])return {title:'运粮铜符',hint:'完成营道护粮。',route:'safe'};
+ if(!r['escort-full'])return {title:'粮车木模',hint:'带着3袋粮抵达营门；可选老周和护粮令。',route:'safe'};
+ if(!r['escort-clever'])return {title:'传令皮囊',hint:'同一局击碎连锁小坛，再射断旗帘绳并通关。',route:'safe'};
+ if(!r['escort-route-risk'])return {title:'巡边卷图',hint:'改走山径并通关；每两箭就会推进一次危险。',route:'risk'};
+ return null;
+}
