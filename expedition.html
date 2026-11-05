@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>夜护粮车 · 开弓</title><link rel="preload" href="fonts/kaigong-display.woff2?v=experience4" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="camp.css?v=growth65"><link rel="stylesheet" href="ui-system.css?v=growth65"><link rel="stylesheet" href="field.css?v=growth65"><link rel="stylesheet" href="expedition.css"></head>
+<body class="field-training expedition"><main>
+<header><a href="camp.html"><span class="brand-seal">弓</span> 开弓</a><span class="field-label">夜护粮车</span><button id="journey-open">行军图</button><button id="sound">开启声音</button><a href="camp.html">回营地</a></header>
+<section class="arena"><div class="field-heading"><span id="progress">夜护粮车 · 四程</span><h1 id="title">夜护粮车</h1><p id="rule"></p></div><canvas id="scene" width="1000" height="720" aria-label="夜护粮车场景"></canvas><div id="field-cue" role="status"></div></section>
+<section class="panel"><div class="field-status"><span id="objective"></span><span id="attempts">尚未出箭</span></div><div id="targets" role="group" aria-label="选择射击目标"></div>
+<div id="aim"><div class="aim-readout"><strong id="aim-cue">按住拉弓</strong><b id="power">0%</b></div><div id="meter" role="progressbar" aria-label="弓力" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="power-fill"></i><i id="zone"></i><i id="gold"></i><b id="needle"></b></div><div class="meter-scale"><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span></div><button id="draw" class="primary">按住拉弓</button></div>
+<div class="field-bottom"><button id="cancel">收弓</button><p id="feedback" role="status">青区慢拉 · 金芯神射</p><button id="tap">轻点操作</button></div><div id="done-actions" hidden><button id="retry">再练一次</button><button id="next" class="primary">继续前行 →</button></div></section>
+<footer>赛博小熊猫 Loki · <span id="save-state">行军进度自动保存</span></footer></main>
+<dialog id="journey" aria-label="出征军令"><header class="journey-heading"><span id="sheet-kicker">军中差事</span><button id="sheet-close" aria-label="返回射场">×</button></header><h2 id="sheet-title">夜护粮车</h2><p id="sheet-note"></p><div id="sheet-content"></div><footer id="sheet-actions"></footer></dialog>
+<dialog id="field-pause"><h2>车队暂歇</h2><p>机关与粮车都停在原处。</p><button id="resume" class="primary">继续护粮</button></dialog>
+<script type="module" src="expedition.mjs"></script></body></html>

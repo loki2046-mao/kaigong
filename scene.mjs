@@ -101,6 +101,7 @@ export function drawScene(g,f){
    g.drawImage(bg,(iw-sw)/2,(ih-sh)/2,sw,sh,0,0,1000,720);
    if(!f.theme&&f.bow?.chapter>=5){g.save();g.fillStyle=f.bow.chapter===8?'rgba(51,81,105,.22)':'rgba(124,49,17,.09)';g.fillRect(0,0,1000,720);g.restore();}
  }
+ if(f.night){g.fillStyle='rgba(10,24,47,.42)';g.fillRect(0,0,1000,720);}
  // Falling leaves drift outside the target corridor; their cadence never signals hit timing.
  if(!reduced&&(!f.theme||f.theme==='autumn')&&f.bow?.chapter!==8)for(let i=0;i<9;i++){
    const lx=(i*143+t*(12+i%3*3))%1040-20,ly=(i*67+t*(8+i%4))%390;
@@ -117,6 +118,7 @@ export function drawScene(g,f){
  const impactAge=age-(f.shot?.flight||.2),arrived=!!outcome&&impactAge>=0,mood=outcome?(arrived?outcome:null):f.crowdMood,cheer=mood==='perfect'||mood==='good',miss=mood&&!cheer;
  const crowd=[[75,666,125],[340,682,139],[725,681,136],[935,669,132]];
  crowd.forEach(([x,y,h],i)=>{
+   if(Number.isInteger(f.onlyCompanion)&&i!==f.onlyCompanion)return;
    const hop=reduced?0:cheer?Math.abs(Math.sin(Math.max(0,impactAge)*10+i))*(outcome==='perfect'?12:5):Math.sin(t*1.4+i)*1.2;
    const tilt=reduced?0:miss?Math.sin(t*5+i)*.035:cheer?Math.sin(t*7+i)*.025:Math.sin(t*1.2+i)*.008;
    oval(g,x,y+2,h*.26,5,'#65412733');if(npcAtlas?.complete&&npcAtlas.naturalWidth){const cell=npcAtlas.naturalWidth/4,pose=cheer?3:f.holding?2:!reduced&&Math.floor(t/4+i)%4===0?1:0;const [ry,rh]=[[0,300],[300,320],[620,305],[925,329]][i],w=h*cell/rh;g.drawImage(npcAtlas,pose*cell,ry,cell,rh,x-w/2,y-hop-h,w,h);}else sprite(g,4+i,x,y-hop,h,tilt);
