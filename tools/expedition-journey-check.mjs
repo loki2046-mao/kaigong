@@ -1,7 +1,7 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 const b=await chromium.launch({channel:'chrome',headless:true,args:['--no-proxy-server','--disable-quic']});
-try{const p=await b.newPage({viewport:{width:390,height:844}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8767/expedition.html');for(let i=0;i<2;i++)await p.getByRole('button',{name:'下一项 →'}).click();await p.getByRole('button',{name:'选择路线 →'}).click();await p.getByRole('button',{name:'出发护粮 →'}).click();
+try{const p=await b.newPage({viewport:{width:390,height:844}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8767/expedition.html');await p.locator('#draw').waitFor();
 const state=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('kg-profiles-v1')).slots[0]);
 async function shoot(){await p.locator('#draw').focus();await p.keyboard.down('Space');await p.waitForFunction(()=>parseFloat(document.querySelector('#needle').style.left)>=parseFloat(document.querySelector('#gold').style.left));await p.keyboard.up('Space');await p.waitForTimeout(2100);}
 await shoot();await p.locator('#next').click();await p.locator('[data-target=jar]').click();await shoot();await p.locator('#next').click();await p.getByRole('button',{name:/屏息令/}).click();await p.locator('[data-target=cord]').click();await shoot();await shoot();await shoot();await p.locator('#next').click();await shoot();
