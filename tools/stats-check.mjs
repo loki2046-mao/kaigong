@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import{spawnSync}from'node:child_process';
-import worker,{dayAt,validVisit}from'../stats-service/worker.mjs';import{dailyVisitor,visitDay}from'../visit-stats.mjs';
+import worker,{dayAt,validVisit,rateLimitKey}from'../stats-service/worker.mjs';import{dailyVisitor,visitDay}from'../visit-stats.mjs';
 const one='11111111-1111-4111-8111-111111111111',two='22222222-2222-4222-8222-222222222222';
 const PAGES='https://kaigong-loki.pages.dev',CN='https://kaigong.hiloki.cn',EVIL='https://evil.test';
 test('统计按北京时间跨日，匿名ID跨日复用以便累计去重',()=>{const t=Date.parse('2026-10-25T16:00:00Z');assert.equal(dayAt(t),'2026-10-26');assert.equal(visitDay(t-1),'2026-10-25');const map=new Map(),s={getItem:k=>map.get(k),setItem:(k,v)=>map.set(k,v)};assert.equal(dailyVisitor(s,'2026-10-25',()=>one),one);assert.equal(dailyVisitor(s,'2026-10-25',()=>two),one);assert.equal(dailyVisitor(s,'2026-10-26',()=>two),one);assert.equal(map.size,1);});
@@ -44,3 +44,13 @@ with c:
 assert c.execute('SELECT uv,pv FROM totals').fetchone()==(2,4)
 assert c.execute('SELECT uv,pv FROM daily WHERE day=?',('2026-10-27',)).fetchone()==(1,1)
 `;const result=spawnSync('python3',['-c',code],{encoding:'utf8'});assert.equal(result.status,0,result.stderr);});
+
+test('国内代理限流仅信任实际服务器 IP，伪造头不能切换限流身份',()=>{
+ const env={CN_PROXY_IP:'49.232.36.74'};
+ const req=(peer,client)=>new Request('https://stats.internal/stats',{headers:{'CF-Connecting-IP':peer,'X-Kaigong-Client-IP':client}});
+ assert.equal(rateLimitKey(req('49.232.36.74','1.2.3.4'),env),'cn:1.2.3.4');
+ assert.equal(rateLimitKey(req('49.232.36.74','2001:db8::1'),env),'cn:2001:db8::1');
+ assert.equal(rateLimitKey(req('8.8.8.8','1.2.3.4'),env),'8.8.8.8');
+ assert.equal(rateLimitKey(req('49.232.36.74','arbitrary-key'),env),'49.232.36.74');
+ assert.equal(rateLimitKey(req('49.232.36.74','1.2.3.4'),{}),'49.232.36.74');
+});

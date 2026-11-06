@@ -1,12 +1,7 @@
 // This module never reads a character profile or game save.
 const HOSTS=new Set(['kaigong-loki.pages.dev','kaigong.hiloki.cn']);
-// Public Worker base for CloudBase / hiloki.cn (absolute). Pages keeps relative /api/visits.
-const PUBLIC_STATS_BASE='https://kaigong-visit-stats.lokimao0426.workers.dev';
-function apiBase(){
- if(location.hostname==='kaigong-loki.pages.dev')return '/api/visits';
- if(location.hostname==='kaigong.hiloki.cn')return PUBLIC_STATS_BASE;
- return '';
-}
+// Both production hosts expose the same-origin statistics gateway.
+function apiBase(){return HOSTS.has(location.hostname)?'/api/visits':'';}
 export function visitorUUID(){if(crypto.randomUUID)return crypto.randomUUID();const b=crypto.getRandomValues(new Uint8Array(16));b[6]=(b[6]&15)|64;b[8]=(b[8]&63)|128;const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join('');return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;}
 export const visitDay=(now=Date.now())=>new Date(now+8*3600000).toISOString().slice(0,10);
 export function dailyVisitor(storage,day,uuid=visitorUUID){

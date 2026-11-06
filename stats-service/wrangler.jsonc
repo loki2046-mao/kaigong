@@ -3,6 +3,7 @@
  "main":"worker.mjs",
  "compatibility_date":"2026-10-01",
  "workers_dev":true,
+ "vars":{"CN_PROXY_IP":"49.232.36.74"},
  "observability":{"enabled":false},
  "d1_databases":[{"binding":"DB","database_name":"kaigong-visit-stats","database_id":"5bfd1de9-28b7-41a8-9de2-452fa9816524"}],
  "ratelimits":[{"name":"LIMITER","namespace_id":"27102601","simple":{"limit":60,"period":60}}],

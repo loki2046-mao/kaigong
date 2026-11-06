@@ -1,5 +1,5 @@
 // Pages service-binding proxy. Production hostname only: preview/custom domains get 403
-// (use the public workers.dev Worker for CloudBase / hiloki.cn cross-origin stats).
+// The CN gateway forwards statistics here to share the existing D1.
 export default {
  async fetch(request,env){
   const url=new URL(request.url);

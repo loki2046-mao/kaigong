@@ -1,0 +1,38 @@
+kaigong.hiloki.cn {
+ root * /var/www/kaigong-cn/current
+ encode zstd gzip
+ header {
+  X-Content-Type-Options nosniff
+  Referrer-Policy strict-origin-when-cross-origin
+  X-Frame-Options SAMEORIGIN
+  Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'"
+ }
+ @stats path /api/visits/stats /api/visits/visit /api/visits/experience /api/visits/experience-stats
+ handle @stats {
+  request_body {
+   max_size 1KB
+  }
+  reverse_proxy https://kaigong-loki.pages.dev {
+   header_up Host kaigong-loki.pages.dev
+   header_up X-Kaigong-Client-IP {remote_host}
+   header_up -Cookie
+   transport http {
+    dial_timeout 5s
+    response_header_timeout 10s
+   }
+  }
+ }
+ handle /api/* {
+  respond "Not found" 404
+ }
+ handle {
+  @private path /_* /.*
+  respond @private "Not found" 404
+  try_files {path} {path}.html {path}/ =404
+  header Cache-Control no-cache
+  @assets path /art/* /fonts/* /audio/*
+  header @assets Cache-Control "public, max-age=86400"
+  file_server
+ }
+}

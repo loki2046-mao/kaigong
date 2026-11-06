@@ -10,6 +10,14 @@ function json(data,status=200,{origin=null,write=false}={}){
  return Response.json(data,{status,headers});
 }
 async function digest(s){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+// Only the dedicated CN origin may supply a client address for rate limiting.
+// Caddy overwrites this header with the TCP peer. Never trust browser-supplied XFF.
+export function rateLimitKey(request,env){
+ const peer=request.headers.get('CF-Connecting-IP')||'unknown';
+ const client=request.headers.get('X-Kaigong-Client-IP')||'';
+ if(env.CN_PROXY_IP&&peer===env.CN_PROXY_IP&&/^[0-9a-fA-F:.]{3,45}$/.test(client))return 'cn:'+client;
+ return peer;
+}
 export default {
  async fetch(request,env,ctx){
   const path=new URL(request.url).pathname,day=dayAt(),origin=allowOrigin(request.headers.get('Origin'));
@@ -22,7 +30,7 @@ export default {
   if(!read&&!write)return json({error:'method'},405);
   if(write&&!origin)return json({error:'origin'},403);
   // Per-edge rate limit; CORS alone is not authentication or bot protection.
-  if(!(await env.LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success)return json({error:'rate_limited'},429,{origin,write});
+  if(!(await env.LIMITER.limit({key:rateLimitKey(request,env)})).success)return json({error:'rate_limited'},429,{origin,write});
   try{
    if(read&&path==='/experience-stats'){const rows=await env.DB.prepare('SELECT day,name,count FROM experience_daily ORDER BY day DESC LIMIT 210').all();return json({unit:'sessions_with_event',rows:rows.results||[]},200);}
    if(read){
