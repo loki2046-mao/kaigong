@@ -16,6 +16,11 @@ if(typeof document!=='undefined'){
   panel.className='visit-stats';summary.textContent='今日访客 — · 浏览 — ｜ 累计访客 — · 浏览 —';
   note.textContent='今日按北京时间统计，累计从统计功能上线开始保留。两项访客均按匿名浏览器标识去重，浏览为页面打开次数，不代表开局人数；换设备、清理浏览器数据或拦截统计会影响结果。仅记录匿名访问标识，不上传姓名或存档。';
   panel.append(summary,note);footer.prepend(panel);
+  const saveNote=document.createElement('p');
+  saveNote.className='save-region-note';
+  saveNote.textContent='存档提示：进度保存在当前设备的当前浏览器中。国内版与海外版存档独立；更换入口前，请在「档案」中导出存档，再到另一入口导入。清理浏览器数据可能导致进度丢失，请定期备份。';
+  saveNote.style.cssText='max-width:680px;margin:10px auto 0;font-size:12px;line-height:1.7;opacity:.85;text-align:center;white-space:normal';
+  footer.append(saveNote);
   const base=apiBase();
   if(!HOSTS.has(location.hostname)||!base){summary.textContent='访问统计仅正式站记录';}
   else{

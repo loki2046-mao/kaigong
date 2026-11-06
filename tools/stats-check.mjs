@@ -54,3 +54,4 @@ test('国内代理限流仅信任实际服务器 IP，伪造头不能切换限�
  assert.equal(rateLimitKey(req('49.232.36.74','arbitrary-key'),env),'49.232.36.74');
  assert.equal(rateLimitKey(req('49.232.36.74','1.2.3.4'),{}),'49.232.36.74');
 });
+test('分站统计必须提供管理员访问码，未授权不触碰数据库',async()=>{let accessed=false;const env={ADMIN_STATS_TOKEN:'test-admin',LIMITER:{limit:async()=>({success:true})},DB:{prepare(){accessed=true;throw Error('unexpected')}}};for(const token of ['', 'Bearer wrong']){const r=await worker.fetch(new Request('https://stats.test/experience-stats',{headers:{Authorization:token}}),env,{});assert.equal(r.status,401);assert.equal(r.headers.get('Cache-Control'),'no-store');}assert.equal(accessed,false);});

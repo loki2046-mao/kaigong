@@ -32,7 +32,12 @@ export default {
   // Per-edge rate limit; CORS alone is not authentication or bot protection.
   if(!(await env.LIMITER.limit({key:rateLimitKey(request,env)})).success)return json({error:'rate_limited'},429,{origin,write});
   try{
-   if(read&&path==='/experience-stats'){const rows=await env.DB.prepare('SELECT day,name,count FROM experience_daily ORDER BY day DESC LIMIT 210').all();return json({unit:'sessions_with_event',rows:rows.results||[]},200);}
+   if(read&&path==='/experience-stats'){
+    if(!env.ADMIN_STATS_TOKEN||request.headers.get('Authorization')!=='Bearer '+env.ADMIN_STATS_TOKEN)return json({error:'unauthorized'},401);
+    const daily=await env.DB.prepare('SELECT site,day,COUNT(DISTINCT visitor) AS uv,COUNT(*) AS pv FROM site_visits GROUP BY site,day ORDER BY day DESC LIMIT 180').all();
+    const totals=await env.DB.prepare('SELECT site,COUNT(DISTINCT visitor) AS uv,COUNT(*) AS pv FROM site_visits GROUP BY site').all();
+    const meta=await env.DB.prepare('SELECT started FROM site_stats_meta WHERE id=1').first();
+    const rows=await env.DB.prepare('SELECT day,name,count FROM experience_daily ORDER BY day DESC LIMIT 210').all();return json({unit:'sessions_with_event',rows:rows.results||[],daily:daily.results||[],totals:totals.results||[],started:meta?.started,day},200);}
    if(read){
     const key=new Request(new URL('/cached/'+day,request.url));
     try{const cached=await caches.default.match(key);if(cached)return cached;}catch{}
@@ -59,7 +64,8 @@ export default {
    await env.DB.batch([
     env.DB.prepare('INSERT OR IGNORE INTO all_visitors(visitor) VALUES(?)').bind(visitor),
     env.DB.prepare('INSERT OR IGNORE INTO visitors(day,visitor) VALUES(?,?)').bind(day,visitor),
-    env.DB.prepare('INSERT OR IGNORE INTO events(day,event) VALUES(?,?)').bind(day,data.event)
+    env.DB.prepare('INSERT OR IGNORE INTO events(day,event) VALUES(?,?)').bind(day,data.event),
+    env.DB.prepare('INSERT OR IGNORE INTO site_visits(site,day,visitor,event) VALUES(?,?,?,?)').bind(origin==='https://kaigong.hiloki.cn'?'cn':'overseas',day,visitor,data.event)
    ]);
    return json({ok:true,day},200,{origin,write:true});
   }catch{return json({error:'unavailable'},503,{origin,write});}
