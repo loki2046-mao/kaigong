@@ -17,6 +17,6 @@ console.log('Public files built in release/public');
 
 await appendFile(new URL('_headers',out),"/art/*\n  Cache-Control: public, max-age=86400\n/audio/*\n  Cache-Control: public, max-age=86400\n");
 
-await writeFile(new URL('version.json',out),JSON.stringify({version:'6.6.3',release:'dual-region-20261106',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
+await writeFile(new URL('version.json',out),JSON.stringify({version:'6.6.4',release:'dual-region-20261106',commit:process.env.SOURCE_COMMIT||null,builtAt:new Date().toISOString()}));
 
 const {bundlePublic}=await import('./bundle-public.mjs');await bundlePublic(out);

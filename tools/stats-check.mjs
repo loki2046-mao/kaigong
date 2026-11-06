@@ -55,3 +55,10 @@ test('国内代理限流仅信任实际服务器 IP，伪造头不能切换限�
  assert.equal(rateLimitKey(req('49.232.36.74','1.2.3.4'),{}),'49.232.36.74');
 });
 test('分站统计必须提供管理员访问码，未授权不触碰数据库',async()=>{let accessed=false;const env={ADMIN_STATS_TOKEN:'test-admin',LIMITER:{limit:async()=>({success:true})},DB:{prepare(){accessed=true;throw Error('unexpected')}}};for(const token of ['', 'Bearer wrong']){const r=await worker.fetch(new Request('https://stats.test/experience-stats',{headers:{Authorization:token}}),env,{});assert.equal(r.status,401);assert.equal(r.headers.get('Cache-Control'),'no-store');}assert.equal(accessed,false);});
+
+test('断网补报保留原日期，仅接受最近七天，未来与无效日期拒绝',()=>{
+ const v={visitor:one,event:two};
+ assert.ok(validVisit({...v,day:'2026-11-05'},'2026-11-06'));
+ assert.ok(validVisit({...v,day:'2026-10-30'},'2026-11-06'));
+ for(const day of ['2026-10-29','2026-11-07','2026-02-30','not-a-day'])assert.ok(!validVisit({...v,day},'2026-11-06'));
+});

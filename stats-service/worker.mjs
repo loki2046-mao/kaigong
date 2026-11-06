@@ -1,7 +1,8 @@
 const ALLOWED=new Set(['https://kaigong-loki.pages.dev','https://kaigong.hiloki.cn']);
 export const dayAt=(now=Date.now())=>new Date(now+8*3600000).toISOString().slice(0,10);
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export function validVisit(data,day){return data&&Object.keys(data).sort().join(',')==='day,event,visitor'&&data.day===day&&uuid.test(data.visitor)&&uuid.test(data.event);}
+export function validVisit(data,day){return data&&Object.keys(data).sort().join(',')==='day,event,visitor'&&validVisitDay(data.day,day)&&uuid.test(data.visitor)&&uuid.test(data.event);}
+export function validVisitDay(value,today){if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const delta=Date.parse(today)-Date.parse(value);return Number.isFinite(delta)&&delta>=0&&delta<=7*86400000&&new Date(Date.parse(value)).toISOString().slice(0,10)===value;}
 function allowOrigin(origin){return origin&&ALLOWED.has(origin)?origin:null;}
 function json(data,status=200,{origin=null,write=false}={}){
  const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
@@ -60,19 +61,19 @@ export default {
     return json({ok:true},200,{origin,write:true});
    }
    if(!validVisit(data,day))return json({error:'invalid_visit',day},400,{origin,write:true});
-   const visitor=await digest('kaigong:'+data.visitor);
+   const visitor=await digest('kaigong:'+data.visitor),eventDay=data.day;
    await env.DB.batch([
     env.DB.prepare('INSERT OR IGNORE INTO all_visitors(visitor) VALUES(?)').bind(visitor),
-    env.DB.prepare('INSERT OR IGNORE INTO visitors(day,visitor) VALUES(?,?)').bind(day,visitor),
-    env.DB.prepare('INSERT OR IGNORE INTO events(day,event) VALUES(?,?)').bind(day,data.event),
-    env.DB.prepare('INSERT OR IGNORE INTO site_visits(site,day,visitor,event) VALUES(?,?,?,?)').bind(origin==='https://kaigong.hiloki.cn'?'cn':'overseas',day,visitor,data.event)
+    env.DB.prepare('INSERT OR IGNORE INTO visitors(day,visitor) VALUES(?,?)').bind(eventDay,visitor),
+    env.DB.prepare('INSERT OR IGNORE INTO events(day,event) VALUES(?,?)').bind(eventDay,data.event),
+    env.DB.prepare('INSERT OR IGNORE INTO site_visits(site,day,visitor,event) VALUES(?,?,?,?)').bind(origin==='https://kaigong.hiloki.cn'?'cn':'overseas',eventDay,visitor,data.event)
    ]);
    return json({ok:true,day},200,{origin,write:true});
   }catch{return json({error:'unavailable'},503,{origin,write});}
  },
  async scheduled(event,env,ctx){
-  // Keep daily aggregates, discard anonymous deduplication rows after three days.
-  const cutoff=dayAt(Date.now()-3*86400000);
+  // Keep daily aggregates, discard anonymous deduplication rows after thirty days (queued visits may arrive up to seven days late).
+  const cutoff=dayAt(Date.now()-30*86400000);
   ctx.waitUntil(env.DB.batch([env.DB.prepare('DELETE FROM experience_events WHERE day<?').bind(cutoff),env.DB.prepare('DELETE FROM visitors WHERE day<?').bind(cutoff),env.DB.prepare('DELETE FROM events WHERE day<?').bind(cutoff)]));
  }
 };

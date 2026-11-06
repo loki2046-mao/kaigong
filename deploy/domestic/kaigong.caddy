@@ -8,8 +8,21 @@ kaigong.hiloki.cn {
   Permissions-Policy "camera=(), microphone=(), geolocation=()"
   Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'self'; form-action 'self'"
  }
- @stats path /api/visits/stats /api/visits/visit /api/visits/experience /api/visits/experience-stats
+ @stats path /api/visits/stats /api/visits/visit /api/visits/experience-stats
  handle @stats {
+  request_body {
+   max_size 1KB
+  }
+  reverse_proxy 127.0.0.1:8799 {
+   header_up X-Kaigong-Client-IP {remote_host}
+   header_up -Cookie
+   transport http {
+    dial_timeout 1s
+    response_header_timeout 8s
+   }
+  }
+ }
+ handle /api/visits/experience {
   request_body {
    max_size 1KB
   }
@@ -18,8 +31,8 @@ kaigong.hiloki.cn {
    header_up X-Kaigong-Client-IP {remote_host}
    header_up -Cookie
    transport http {
-    dial_timeout 5s
-    response_header_timeout 10s
+    dial_timeout 3s
+    response_header_timeout 6s
    }
   }
  }

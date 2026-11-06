@@ -9,6 +9,9 @@ export function dailyVisitor(storage,day,uuid=visitorUUID){
  if(saved&&typeof saved.id==='string'&&/^[0-9a-f-]{36}$/i.test(saved.id))return saved.id;
  const id=uuid();try{storage.setItem('kg-visitor-v1',JSON.stringify({day,id}));}catch{}return id;
 }
+export const STATS_CACHE='kg-stats-cache-v1';
+export function cachedStats(storage){try{return JSON.parse(storage.getItem(STATS_CACHE))}catch{return null}}
+export function validCounts(data){return data&&['uv','pv','totalUv','totalPv'].every(k=>Number.isSafeInteger(data[k])&&data[k]>=0)}
 if(typeof document!=='undefined'){
  const footer=document.querySelector('.credits');
  if(footer){
@@ -25,26 +28,28 @@ if(typeof document!=='undefined'){
   if(!HOSTS.has(location.hostname)||!base){summary.textContent='访问统计仅正式站记录';}
   else{
    let recordedDay='',eventDay='',eventId='',busy=false;
-   let hasStats=false;let visitorId;
+   let hasStats=false;let visitorId;let recordBusy=false;
+   const render=(data,cached=false)=>{if(!validCounts(data))return;hasStats=true;summary.replaceChildren();for(const label of [`${data.day===visitDay()?'今日':'最近同步日'}访客 ${data.uv.toLocaleString()} · 浏览 ${data.pv.toLocaleString()}`,`累计访客 ${data.totalUv.toLocaleString()} · 浏览 ${data.totalPv.toLocaleString()}${cached||data.stale?' · 待同步':''}`]){const line=document.createElement('span');line.textContent=label;summary.append(line);}};
+   try{render(cachedStats(localStorage),true)}catch{}
    const request=async(path,options={})=>{const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);try{return await fetch(base+path,{...options,credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});}finally{clearTimeout(timer)}};
    async function refresh(){
     if(busy||document.hidden)return;busy=true;
     try{
      const day=visitDay();
      // Reading public counts does not depend on storage or a successful write.
-     const record=async()=>{try{if(recordedDay===day)return;
+     const record=async()=>{try{if(recordedDay===day||recordBusy)return;recordBusy=true;
       if(!visitorId){try{visitorId=dailyVisitor(localStorage,day)}catch{visitorId=visitorUUID()}}
       if(eventDay!==day){eventDay=day;eventId=visitorUUID()}
       const response=await request('/visit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({day,visitor:visitorId,event:eventId})});
       if(response.ok)recordedDay=day;
-     }catch{}};void record();
+     }catch{}finally{recordBusy=false}};void record();
      const response=await request('/stats');if(!response.ok)throw Error('stats unavailable');const data=await response.json();
-     if(data.day!==visitDay()||!Number.isSafeInteger(data.uv)||!Number.isSafeInteger(data.pv)||!Number.isSafeInteger(data.totalUv)||!Number.isSafeInteger(data.totalPv))throw Error('invalid stats');
-     hasStats=true;summary.replaceChildren();for(const label of [`今日访客 ${data.uv.toLocaleString()} · 浏览 ${data.pv.toLocaleString()}`,`累计访客 ${data.totalUv.toLocaleString()} · 浏览 ${data.totalPv.toLocaleString()}`]){const line=document.createElement('span');line.textContent=label;summary.append(line);}
+     if(!validCounts(data)||!/^\d{4}-\d{2}-\d{2}$/.test(data.day))throw Error('invalid stats');
+     render(data);try{localStorage.setItem(STATS_CACHE,JSON.stringify(data))}catch{}
     }catch{if(!hasStats)summary.textContent='统计连接较慢，稍后重试 · 不影响游戏';}finally{busy=false;}
    }
    // No render-loop work, no blocking game startup. Hidden tabs do not poll.
-   setTimeout(refresh,1500);setTimeout(refresh,16000);window.addEventListener('online',refresh);setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
+   setTimeout(refresh,1500);setTimeout(refresh,5000);setTimeout(refresh,16000);setTimeout(refresh,32000);window.addEventListener('online',refresh);setInterval(refresh,60000);document.addEventListener('visibilitychange',refresh);
   }
  }
 }

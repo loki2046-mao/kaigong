@@ -1,0 +1,23 @@
+[Unit]
+Description=Kaigong CN durable statistics relay
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+User=kaigong-stats
+Group=kaigong-stats
+ExecStart=/usr/bin/python3 /opt/kaigong-stats/stats-relay.py
+Restart=on-failure
+RestartSec=3
+StateDirectory=kaigong-stats
+StateDirectoryMode=0700
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=192M
+TasksMax=64
+[Install]
+WantedBy=multi-user.target
