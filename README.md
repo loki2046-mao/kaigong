@@ -2,9 +2,11 @@
 
 由赛博小熊猫 Loki 制作的古风网页射箭小游戏。手机和电脑均可游玩；长按拉弓，松手出箭，也支持轻点和键盘空格。
 
+可玩地址：[国内 kaigong.hiloki.cn](https://kaigong.hiloki.cn/) · [国外镜像](https://kaigong-loki.pages.dev/)
+
 ## V4 · 一箭有回响
 
-- 十回五十关，练习精准、移动、骑射、开门与旗帘机关。
+- 十二回六十关，练习精准、移动、骑射、开门与旗帘机关。
 - 旗靶可以直接穿旗，也可以先断帘绳；每回终试可选大靶或小靶。
 - 章节各有星级挑战；旧档案与旧星级保留。
 - 秋日军营、雪山边营、封帅演武场三组场景。
@@ -55,4 +57,4 @@ npx wrangler pages deploy release/public --project-name kaigong-loki --branch ma
 
 由[赛博小熊猫 Loki](https://hiloki.ai/about)制作与维护。用 AI 做产品、做内容，把真实制作中的修改、取舍和方法留下来。
 
-[个人网站](https://hiloki.ai/) · [作品与制作记录](https://hiloki.ai/works) · [公众号文章](https://hiloki.ai/articles/) · [GitHub](https://github.com/loki2046-mao)
+[个人网站 · 海外](https://hiloki.ai/) · [个人网站 · 国内](https://hiloki.cn/) · [作品与制作记录](https://hiloki.ai/works) · [公众号文章](https://hiloki.ai/articles/) · [GitHub](https://github.com/loki2046-mao)
